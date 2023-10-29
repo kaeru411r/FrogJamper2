@@ -14,10 +14,6 @@ public class LotusManager : MonoBehaviour
     [SerializeField] float _timeFactor = 1.0f;
     [Tooltip("枚数による生成確立の上昇係数")]
     [SerializeField] float _numFactor = 1.0f;
-    [Tooltip("蓮の生存可能範囲(左上)")]
-    [SerializeField] Vector2 _leftTop;
-    [Tooltip("蓮の生存可能範囲(右下)")]
-    [SerializeField] Vector2 _rightBottom;
     [Tooltip("蓮の最低スピード")]
     [SerializeField] float _lowerSpeed = 1.0f;
     [Tooltip("蓮の最高スピード")]
@@ -38,17 +34,18 @@ public class LotusManager : MonoBehaviour
     public float TimeFactor { get => _timeFactor; set => _timeFactor = value; }
     /// <summary>枚数による生成確立の上昇係数</summary>
     public float NumFactor { get => _numFactor; set => _numFactor = value; }
-    /// <summary>蓮の生成範囲(右下)</summary>
-    public Vector2 RightBottom { get => _leftTop; set => _leftTop = value; }
-    /// <summary>蓮の生成範囲(左上)</summary>
-    public Vector2 LeftTop { get => _rightBottom; set => _rightBottom = value; }
 
 
     public void RandomGenerate(int num)
     {
-        for (var i = 0; i < num; i++)
+        var field = Field.Instance;
+
+        if (field)
         {
-            var lotus = Generate(_leftTop, _rightBottom);
+            for (var i = 0; i < num; i++)
+            {
+                Generate(field.TopLeft, field.BottomRight);
+            }
         }
     }
 
@@ -70,30 +67,37 @@ public class LotusManager : MonoBehaviour
     /// <returns></returns>
     public Lotus Generate(Vector2 leftTop, Vector2 rightBottom)
     {
-        Vector2 point;
-        if (leftTop != rightBottom)
+        var field = Field.Instance;
+
+        if (field)
         {
-            point = new Vector2(Random.Range(leftTop.x, rightBottom.x), Random.Range(leftTop.y, rightBottom.y));
+            Vector2 point;
+            if (leftTop != rightBottom)
+            {
+                point = new Vector2(Random.Range(leftTop.x, rightBottom.x), Random.Range(leftTop.y, rightBottom.y));
+            }
+            else
+            {
+                point = leftTop;
+            }
+
+            var lotus = Instantiate(_lotus, point, Quaternion.identity);
+            _lotusList.Add(lotus);
+
+            var speed = Random.Range(_lowerSpeed, _upperSpeed);
+            lotus.Speed = Vector2.down * speed;
+            lotus.RunStart();
+            Destroy(lotus.gameObject, Mathf.Abs(field.TopLeft.y - field.BottomRight.y) / speed);
+
+            lotus.OnDestroyAction += (_) =>
+            {
+                _lotusList.Remove(lotus);
+            };
+
+            return lotus;
         }
-        else
-        {
-            point = leftTop;
-        }
 
-        var lotus = Instantiate(_lotus, point, Quaternion.identity);
-        _lotusList.Add(lotus);
-
-        var speed = Random.Range(_lowerSpeed, _upperSpeed);
-        lotus.Speed = Vector2.down * speed;
-        lotus.RunStart();
-        Destroy(lotus.gameObject, Mathf.Abs(_leftTop.y - _rightBottom.y) / speed);
-
-        lotus.OnDestroyAction += (_) =>
-        {
-            _lotusList.Remove(lotus);
-        };
-
-        return lotus;
+        return null;
     }
 
 
@@ -104,8 +108,12 @@ public class LotusManager : MonoBehaviour
             yield return new WaitForFixedUpdate();
             if (Lottery())
             {
-                _time = 0.0f;
-                var lotus = Generate(new Vector2(_leftTop.x, _leftTop.y), new Vector2(_rightBottom.x, _leftTop.y));
+                var field = Field.Instance;
+                if (field)
+                {
+                    _time = 0.0f;
+                    var lotus = Generate(new Vector2(field.TopLeft.x, field.TopLeft.y), new Vector2(field.BottomRight.x, field.TopLeft.y));
+                }
             }
             else
             {

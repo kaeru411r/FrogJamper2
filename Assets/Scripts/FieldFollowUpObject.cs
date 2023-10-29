@@ -5,30 +5,13 @@ using UniRx;
 
 public class FieldFollowUpObject : MonoBehaviour
 {
-    static Field _field;
-
-    static Field Field
-    {
-        get
-        {
-            if(!_field)
-            {
-                _field = FindAnyObjectByType<Field>();
-                if(!_field)
-                {
-                    return null;
-                }
-            }
-            return _field;
-        }
-    }
 
     // Start is called before the first frame update
     void Start()
     {
-        if(Field != null)
+        if(Field.Instance != null)
         {
-            Field.MoveSubject.Subscribe(Move).AddTo(this);
+            Field.Instance.MoveSubject.Subscribe(Move).AddTo(this);
         }
     }
 
