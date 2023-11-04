@@ -52,14 +52,17 @@ public class Frog : FieldFollowUpObject
 
     IEnumerator Targeting()
     {
+        Vector2 direction = _targetPosition - (Vector2)transform.position;
+
         while (_isTouching)
         {
             yield return null;
-
+            direction = _targetPosition - (Vector2)transform.position;
+            transform.eulerAngles = new Vector3(0, 0, -Mathf.Atan2(direction.x, direction.y) / Mathf.PI * 180);
             _distance += Time.deltaTime;
         }
 
-        StartCoroutine(Jumping(_targetPosition - (Vector2)transform.position));
+        StartCoroutine(Jumping(direction));
     }
 
     IEnumerator Jumping(Vector2 direction)
