@@ -44,7 +44,7 @@ public class LotusManager : MonoBehaviour
         {
             for (var i = 0; i < num; i++)
             {
-                Generate(field.TopLeft, field.BottomRight);
+                Generate(field.Vertex1, field.Vertex3);
             }
         }
     }
@@ -84,22 +84,16 @@ public class LotusManager : MonoBehaviour
             var lotus = Instantiate(_lotus, point, Quaternion.identity);
             _lotusList.Add(lotus);
 
+            lotus.OnDestroyAction += (value) => _lotusList.Remove(value);
+
             var speed = Random.Range(_lowerSpeed, _upperSpeed);
             lotus.Speed = Vector2.down * speed;
             lotus.RunStart();
-            Destroy(lotus.gameObject, Mathf.Abs(field.TopLeft.y - field.BottomRight.y) / speed);
-
-            lotus.OnDestroyAction += (_) =>
-            {
-                _lotusList.Remove(lotus);
-            };
-
             return lotus;
         }
 
         return null;
     }
-
 
     IEnumerator GenerateLoop()
     {
@@ -112,7 +106,7 @@ public class LotusManager : MonoBehaviour
                 if (field)
                 {
                     _time = 0.0f;
-                    var lotus = Generate(new Vector2(field.TopLeft.x, field.TopLeft.y), new Vector2(field.BottomRight.x, field.TopLeft.y));
+                    var lotus = Generate(new Vector2(field.Vertex1.x, field.Vertex1.y), new Vector2(field.Vertex3.x, field.Vertex1.y));
                 }
             }
             else

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class FieldTester : Field
 {
-    [SerializeField] float _position;
+    [SerializeField] float _pos;
 
     private void OnValidate()
     {
-        Position = _position;
+        Position = _pos;
     }
 }
