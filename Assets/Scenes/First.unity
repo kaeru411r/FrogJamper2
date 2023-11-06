@@ -219,6 +219,7 @@ GameObject:
   - component: {fileID: 1119181738}
   - component: {fileID: 1119181742}
   - component: {fileID: 1119181743}
+  - component: {fileID: 1119181744}
   m_Layer: 0
   m_Name: ReadyFrog
   m_TagString: Untagged
@@ -492,6 +493,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1119181744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119181737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f067f26b2c74a048864ce6ca2abf19f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stand: {fileID: 21300000, guid: 955e5ede860ec8f468ec15027a31c29b, type: 3}
+  _jump: {fileID: 21300000, guid: 5079ce2cc22fea84c89f64a5973b3772, type: 3}
+  _drown: {fileID: 21300000, guid: dde97c061f96d8447b52b3bbcb8f0271, type: 3}
 --- !u!1 &1639651765
 GameObject:
   m_ObjectHideFlags: 0

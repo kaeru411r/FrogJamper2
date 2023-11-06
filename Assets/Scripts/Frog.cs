@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.InputSystem;
-using Unity.VisualScripting.FullSerializer;
+using UniRx;
+using System;
+using Unity.VisualScripting;
+using UnityEngine.UIElements;
 
 public class Frog : FieldFollowUpObject
 {
@@ -14,11 +17,11 @@ public class Frog : FieldFollowUpObject
     float _distance;
     List<Lotus> _touchingLotuses = new List<Lotus>();
     bool _isTouching = false;
-    FrogState _frogState = FrogState.Stand;
+    ReactiveProperty<FrogState> _frogState = new ReactiveProperty<FrogState>(FrogState.Stand);
 
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
-
+    public IObservable<FrogState> StateSubject { get => _frogState; }
 
     public void OnMousePosition(InputAction.CallbackContext callback)
     {
@@ -30,7 +33,7 @@ public class Frog : FieldFollowUpObject
 
     public void OnTouch(InputAction.CallbackContext callback)
     {
-        if (_frogState == FrogState.Stand)
+        if (_frogState.Value == FrogState.Stand)
         {
             if (callback.phase == InputActionPhase.Started)
             {
@@ -52,22 +55,28 @@ public class Frog : FieldFollowUpObject
 
     IEnumerator Targeting()
     {
-        Vector2 direction = _targetPosition - (Vector2)transform.position;
-
-        while (_isTouching)
+        while (true)
         {
             yield return null;
-            direction = _targetPosition - (Vector2)transform.position;
+
+            var direction = _targetPosition - (Vector2)transform.position;
             transform.eulerAngles = new Vector3(0, 0, -Mathf.Atan2(direction.x, direction.y) / Mathf.PI * 180);
             _distance += Time.deltaTime;
+
+            if (!_isTouching)
+            {
+                StartCoroutine(Jumping(direction));
+                break;
+            }
         }
 
-        StartCoroutine(Jumping(direction));
     }
 
     IEnumerator Jumping(Vector2 direction)
     {
-        _frogState = FrogState.Jump;
+        transform.parent = null;
+        _rigidbody.simulated = true;
+        _frogState.Value = FrogState.Jump;
         while (_distance > 0)
         {
             yield return new WaitForFixedUpdate();
@@ -85,7 +94,7 @@ public class Frog : FieldFollowUpObject
     {
         if (_touchingLotuses.Count > 0)
         {
-            _frogState = FrogState.Stand;
+            _frogState.Value = FrogState.Stand;
             _touchingLotuses = _touchingLotuses.OrderByDescending(
                 lotus => Vector2.Distance(transform.position, lotus.transform.position))
                 .ToList();
@@ -105,11 +114,11 @@ public class Frog : FieldFollowUpObject
 
     private void Drowing()
     {
-
+        _frogState.Value = FrogState.Drown;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.TryGetComponent<Lotus>(out  var lotus))
+        if (collision.gameObject.TryGetComponent<Lotus>(out var lotus))
         {
             Debug.Log($"Enter {lotus}");
             _touchingLotuses.Add(lotus);
