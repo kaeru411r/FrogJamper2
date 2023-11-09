@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: 1119181742}
   - component: {fileID: 1119181743}
   - component: {fileID: 1119181744}
+  - component: {fileID: 1119181745}
   m_Layer: 0
   m_Name: ReadyFrog
   m_TagString: Untagged
@@ -265,19 +266,7 @@ MonoBehaviour:
     m_ActionId: 8210fe8e-47aa-48ff-8ff3-ec442e2d3a95
     m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1119181739}
-        m_TargetAssemblyTypeName: Frog, Assembly-CSharp
-        m_MethodName: OnMousePosition
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 98520f3c-6c37-4ffc-8282-56fe3bda851e
     m_ActionName: Player/MousePosition[/Mouse/position]
   - m_PersistentCalls:
@@ -321,21 +310,13 @@ MonoBehaviour:
     m_ActionId: 428ed89a-2ee0-4bf2-9446-9f5301ea516b
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1119181739}
-        m_TargetAssemblyTypeName: Frog, Assembly-CSharp
-        m_MethodName: OnTouch
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 072167f2-d036-43aa-9c38-8c6b9439bcc2
     m_ActionName: Player/Touch[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d997ca34-13a4-494b-b15a-b6ee04af2489
+    m_ActionName: UI/Move
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -354,6 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 1
+  _playerInput: {fileID: 1119181738}
 --- !u!212 &1119181740
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -508,6 +490,25 @@ MonoBehaviour:
   _stand: {fileID: 21300000, guid: 955e5ede860ec8f468ec15027a31c29b, type: 3}
   _jump: {fileID: 21300000, guid: 5079ce2cc22fea84c89f64a5973b3772, type: 3}
   _drown: {fileID: 21300000, guid: dde97c061f96d8447b52b3bbcb8f0271, type: 3}
+--- !u!255 &1119181745
+FixedJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119181737}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_BreakAction: 3
+  m_AutoConfigureConnectedAnchor: 1
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_DampingRatio: 0
+  m_Frequency: 0
 --- !u!1 &1639651765
 GameObject:
   m_ObjectHideFlags: 0

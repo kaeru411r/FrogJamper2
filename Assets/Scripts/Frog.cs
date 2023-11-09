@@ -12,6 +12,7 @@ public class Frog : FieldFollowUpObject
 {
     [Tooltip("スピード")]
     [SerializeField] float _speed;
+    [SerializeField] PlayerInput _playerInput;
 
     Vector2 _targetPosition;
     float _distance;
@@ -23,7 +24,7 @@ public class Frog : FieldFollowUpObject
     public float Speed { get => _speed; set => _speed = value; }
     public IObservable<FrogState> StateSubject { get => _frogState; }
 
-    public void OnMousePosition(InputAction.CallbackContext callback)
+    void OnMousePosition(InputAction.CallbackContext callback)
     {
         if (callback.phase == InputActionPhase.Performed)
         {
@@ -31,7 +32,7 @@ public class Frog : FieldFollowUpObject
         }
     }
 
-    public void OnTouch(InputAction.CallbackContext callback)
+    void OnTouch(InputAction.CallbackContext callback)
     {
         if (_frogState.Value == FrogState.Stand)
         {
@@ -51,6 +52,13 @@ public class Frog : FieldFollowUpObject
     public void PlayStart()
     {
         StartCoroutine(Targeting());
+    }
+
+    private void Start()
+    {
+        base.Start();
+        _playerInput.TryAddListener("Player", "Touch", OnTouch);
+        _playerInput.TryAddListener("Player", "MousePosition", OnMousePosition);
     }
 
     IEnumerator Targeting()
