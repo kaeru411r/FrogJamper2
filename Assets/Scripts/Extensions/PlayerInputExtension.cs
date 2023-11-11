@@ -18,7 +18,7 @@ public static class PlayerInputExtension
     /// <param name="action"></param>
     /// <param name="call"></param>
     /// <returns></returns>
-    public static bool TryAddListener(this PlayerInput playerInput, string map, string action, UnityAction<InputAction.CallbackContext> call)
+    public static void AddListener(this PlayerInput playerInput, string map, string action, UnityAction<InputAction.CallbackContext> call)
     {
         var actionEvent = playerInput.actionEvents.Where(item =>
         {
@@ -28,11 +28,10 @@ public static class PlayerInputExtension
         if(actionEvent != null )
         {
             actionEvent.AddListener(call);
-            return true;
         }
         else
         {
-            return false;
+            throw (new System.Exception("ƒAƒNƒVƒ‡ƒ“‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ"));
         }
     }
 

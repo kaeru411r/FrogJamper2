@@ -25,6 +25,21 @@ public class InputAgent : MonoBehaviour, InputActionSystem.IPlayerActions
         throw new System.NotImplementedException();
     }
 
+    public void OnSkill1(InputAction.CallbackContext context)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnSkill2(InputAction.CallbackContext context)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnSkill3(InputAction.CallbackContext context)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void OnTouch(InputAction.CallbackContext context)
     {
         Debug.Log(111);

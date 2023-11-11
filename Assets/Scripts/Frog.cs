@@ -59,12 +59,12 @@ public class Frog : FieldFollowUpObject
         StartCoroutine(Targeting());
     }
 
-    private void Start()
+    private new void Start()
     {
         base.Start();
         _joint = GetComponent<Joint2D>();
-        _playerInput.TryAddListener("Player", "Touch", OnTouch);
-        _playerInput.TryAddListener("Player", "MousePosition", OnMousePosition);
+        _playerInput.AddListener("Player", "Touch", OnTouch);
+        _playerInput.AddListener("Player", "MousePosition", OnMousePosition);
     }
 
     IEnumerator Targeting()

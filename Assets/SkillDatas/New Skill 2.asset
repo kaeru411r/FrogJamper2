@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fc37eba1ee193c4aacfea1d4450a6f3, type: 3}
+  m_Name: New Skill 2
+  m_EditorClassIdentifier: 
+  _skills:
+  - rid: 311392945879384067
+  references:
+    version: 2
+    RefIds:
+    - rid: 311392945879384067
+      type: {class: SkillTestA, ns: , asm: Assembly-CSharp}
+      data:
+        _text: skill3
