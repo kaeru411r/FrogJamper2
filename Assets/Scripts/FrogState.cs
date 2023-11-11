@@ -1,5 +1,8 @@
 
 
+/// <summary>
+/// ƒJƒGƒ‹‚Ìó‘Ô‚Ìenum
+/// </summary>
 public enum FrogState
 {
     /// <summary>—§‚Á‚Ä‚¢‚é</summary>

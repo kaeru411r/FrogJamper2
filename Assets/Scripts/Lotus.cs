@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
+/// <summary>
+/// ˜@
+/// </summary>
 public class Lotus : FieldFollowUpObject
 {
     [SerializeField] Vector2 _speed = Vector2.zero;
@@ -32,7 +35,7 @@ public class Lotus : FieldFollowUpObject
         {
             yield return new WaitForFixedUpdate();
             var vec = _speed * Time.fixedDeltaTime;
-            _rigidbody.MovePosition((Vector2)transform.position + vec);
+            Rigidbody.MovePosition((Vector2)transform.position + vec);
             _moveSubject.OnNext(vec.y);
         }
     }

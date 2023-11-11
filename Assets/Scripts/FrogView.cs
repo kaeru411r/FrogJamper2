@@ -4,7 +4,11 @@ using UnityEngine;
 using UniRx;
 using System;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(Frog))]
+
+/// <summary>
+/// カエルの見た目
+/// </summary>
+[RequireComponent(typeof(SpriteRenderer))]
 public class FrogView : MonoBehaviour
 {
     [Tooltip("立ってるカエル")]
@@ -14,15 +18,19 @@ public class FrogView : MonoBehaviour
     [Tooltip("溺れてるカエル")]
     [SerializeField] Sprite _drown;
 
-    Frog _frog;
     SpriteRenderer _spriteRenderer;
 
     // Start is called before the first frame update
     void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _frog = GetComponent<Frog>();
-        _frog.StateSubject.Subscribe(Alteration).AddTo(this);
+    }
+
+    private void Start()
+    {
+        if (TryGetComponent(out Frog frog)) {
+            frog.StateSubject.Subscribe(Alteration).AddTo(this);
+        }
     }
 
 

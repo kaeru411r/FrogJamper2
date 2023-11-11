@@ -8,6 +8,10 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// カエル
+/// </summary>
+[RequireComponent(typeof(Joint2D))]
 public class Frog : FieldFollowUpObject
 {
     [Tooltip("スピード")]
@@ -19,10 +23,11 @@ public class Frog : FieldFollowUpObject
     List<Lotus> _touchingLotuses = new List<Lotus>();
     bool _isTouching = false;
     ReactiveProperty<FrogState> _frogState = new ReactiveProperty<FrogState>(FrogState.Stand);
+    Joint2D _joint;
 
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
-    public IObservable<FrogState> StateSubject { get => _frogState; }
+    public IObservable<FrogState> StateSubject => _frogState;
 
     void OnMousePosition(InputAction.CallbackContext callback)
     {
@@ -57,6 +62,7 @@ public class Frog : FieldFollowUpObject
     private void Start()
     {
         base.Start();
+        _joint = GetComponent<Joint2D>();
         _playerInput.TryAddListener("Player", "Touch", OnTouch);
         _playerInput.TryAddListener("Player", "MousePosition", OnMousePosition);
     }
@@ -82,20 +88,23 @@ public class Frog : FieldFollowUpObject
 
     IEnumerator Jumping(Vector2 direction)
     {
-        transform.parent = null;
-        _rigidbody.simulated = true;
+        //transform.parent = null;
+        Rigidbody.velocity = Vector2.zero;
+        Rigidbody.simulated = true;
+        _joint.enabled = false;
         _frogState.Value = FrogState.Jump;
         while (_distance > 0)
         {
             yield return new WaitForFixedUpdate();
-            float dis = _speed * Time.deltaTime;
+            float dis = _speed * Time.fixedDeltaTime;
             dis = Mathf.Min(dis, _distance);
-            _rigidbody.MovePosition((Vector2)transform.position + (direction * dis));
+            Rigidbody.MovePosition(((Vector2)transform.position + (direction * dis)));
 
             _distance -= dis;
         }
 
         Landing();
+        Debug.Log(9);
     }
 
     private void Landing()
@@ -108,9 +117,12 @@ public class Frog : FieldFollowUpObject
                 .ToList();
 
             var lotus = _touchingLotuses.FirstOrDefault();
-            transform.parent = lotus.transform;
+
             transform.localPosition = Vector3.zero;
-            _rigidbody.simulated = false;
+            transform.position = lotus.transform.position;
+            //Rigidbody.simulated = false;
+            _joint.enabled = true;
+            _joint.connectedBody = lotus.Rigidbody;
         }
         else
         {
@@ -128,7 +140,6 @@ public class Frog : FieldFollowUpObject
     {
         if (collision.gameObject.TryGetComponent<Lotus>(out var lotus))
         {
-            Debug.Log($"Enter {lotus}");
             _touchingLotuses.Add(lotus);
         }
     }
@@ -136,7 +147,6 @@ public class Frog : FieldFollowUpObject
     {
         if (collision.gameObject.TryGetComponent<Lotus>(out var lotus))
         {
-            Debug.Log($"Exit {lotus}");
             _touchingLotuses.Remove(lotus);
         }
     }

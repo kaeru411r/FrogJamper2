@@ -9,11 +9,20 @@ using UnityEngine.InputSystem;
 
 public static class PlayerInputExtension
 {
-    public static bool TryAddListener(this PlayerInput playerInput, string mapName, string actionName, UnityAction<InputAction.CallbackContext> call)
+
+    /// <summary>
+    /// Actionにメソッドを登録する
+    /// </summary>
+    /// <param name="playerInput"></param>
+    /// <param name="map"></param>
+    /// <param name="action"></param>
+    /// <param name="call"></param>
+    /// <returns></returns>
+    public static bool TryAddListener(this PlayerInput playerInput, string map, string action, UnityAction<InputAction.CallbackContext> call)
     {
-        var actionEvent = playerInput.actionEvents.Where(action =>
+        var actionEvent = playerInput.actionEvents.Where(item =>
         {
-            return Regex.IsMatch(action.actionName, $"^{mapName}/{actionName}");
+            return Regex.IsMatch(item.actionName, $"^{map}/{action}");
         }).FirstOrDefault();
 
         if(actionEvent != null )
@@ -25,5 +34,20 @@ public static class PlayerInputExtension
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// Actionからメソッドを除外する
+    /// </summary>
+    /// <param name="playerInput"></param>
+    /// <param name="map"></param>
+    /// <param name="action"></param>
+    /// <param name="call"></param>
+    public static void RemoveListenr(this PlayerInput playerInput, string map, string action, UnityAction<InputAction.CallbackContext> call)
+    {
+        playerInput.actionEvents.Where(item =>
+        {
+            return Regex.IsMatch(item.actionName, $"^{map}/{action}");
+        }).FirstOrDefault().RemoveListener(call);
     }
 }

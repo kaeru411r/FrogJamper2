@@ -4,6 +4,9 @@ using UnityEngine;
 using UniRx;
 using System;
 
+/// <summary>
+/// フィールド
+/// </summary>
 public class Field : MonoBehaviour
 {
     static Field _instance;

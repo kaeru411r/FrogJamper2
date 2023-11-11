@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
+/// <summary>
+/// フィールドに追従するオブジェクト
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class FieldFollowUpObject : MonoBehaviour
 {
     EreaState _ereaState = EreaState.Lost;
 
-    protected Rigidbody2D _rigidbody { get; private set; }
+    public Rigidbody2D Rigidbody { get; private set; }
 
     virtual protected void FieldOut() { }
 
@@ -17,9 +20,9 @@ public class FieldFollowUpObject : MonoBehaviour
     virtual protected void FieldLost() { }
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
+        Rigidbody = GetComponent<Rigidbody2D>();
         if (!Field.Instance)
         {
             Field.Instance.MoveSubject.Subscribe(Move).AddTo(this);
@@ -58,7 +61,7 @@ public class FieldFollowUpObject : MonoBehaviour
 
     void Move(float distance)
     {
-        _rigidbody.MovePosition((Vector2)transform.position + (Vector2.down * distance));
+        Rigidbody.MovePosition((Vector2)transform.position + (Vector2.down * distance));
     }
 
     EreaState EreaCheck()
