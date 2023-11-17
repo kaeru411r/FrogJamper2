@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// 蓮の生成、管理を行う
@@ -21,6 +23,10 @@ public class LotusManager : MonoBehaviour
     [SerializeField] float _lowerSpeed = 1.0f;
     [Tooltip("蓮の最高スピード")]
     [SerializeField] float _upperSpeed = 2.0f;
+    [Tooltip("左上")]
+    [SerializeField] Vector2 _topLeft;
+    [Tooltip("右下")]
+    [SerializeField] Vector2 _bottomRight;
 
     List<Lotus> _lotusList = new List<Lotus>();
     float _time = 0.0f;
@@ -37,6 +43,26 @@ public class LotusManager : MonoBehaviour
     public float TimeFactor { get => _timeFactor; set => _timeFactor = value; }
     /// <summary>枚数による生成確立の上昇係数</summary>
     public float NumFactor { get => _numFactor; set => _numFactor = value; }
+    public Vector2 Vertex1 { get => _topLeft; set => _topLeft = value; }
+    public Vector2 Vertex3 { get => _bottomRight; set => _bottomRight = value; }
+    public Vector2 Vertex2
+    {
+        get => new Vector2(_bottomRight.x, _topLeft.y);
+        set
+        {
+            _topLeft.y = value.y;
+            _bottomRight.x = value.x;
+        }
+    }
+    public Vector2 Vertex4
+    {
+        get => new Vector2(_topLeft.x, _bottomRight.y);
+        set
+        {
+            _topLeft.x = value.x;
+            _bottomRight.y = value.y;
+        }
+    }
 
 
     public void RandomGenerate(int num)
@@ -47,7 +73,7 @@ public class LotusManager : MonoBehaviour
         {
             for (var i = 0; i < num; i++)
             {
-                Generate(field.Vertex1, field.Vertex3);
+                Generate(_topLeft, _bottomRight);
             }
         }
     }
@@ -128,7 +154,30 @@ public class LotusManager : MonoBehaviour
         return hit <= success;
     }
 
+    IEnumerator EreaCheckLoop()
+    {
+        while (true)
+        {
+            if (EreaCheck())
+            {
+                yield break;
+            }
+            yield return null;
+        }
+    }
 
+    bool EreaCheck()
+    {
+
+        var left = Mathf.Min(Vertex1.x, Vertex3.x);
+        var right = Mathf.Max(Vertex1.x, Vertex3.x);
+        var top = Mathf.Max(Vertex1.y, Vertex3.y);
+        var bottom = Mathf.Min(Vertex1.y, Vertex3.y);
+
+        var pos = transform.position;
+
+        return pos.x >= left && pos.x <= right && pos.y >= bottom && pos.y <= top;
+    }
 
 
     private void OnValidate()
@@ -137,5 +186,14 @@ public class LotusManager : MonoBehaviour
         {
             _minValue = 2;
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(Vertex1, Vertex2);
+        Gizmos.DrawLine(Vertex2, Vertex3);
+        Gizmos.DrawLine(Vertex3, Vertex4);
+        Gizmos.DrawLine(Vertex4, Vertex1);
     }
 }

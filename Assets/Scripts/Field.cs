@@ -31,8 +31,6 @@ public class Field : MonoBehaviour
     [SerializeField] Vector2 _topLeft;
     [Tooltip("エリア右下")]
     [SerializeField] Vector2 _bottomRight;
-    [Tooltip("プレイエリア上限")]
-    [SerializeField] float _playEreaTop;
 
     Subject<float> _moveSubject = new Subject<float>();
     float _position = 0.0f;
@@ -70,7 +68,6 @@ public class Field : MonoBehaviour
         }
     }
 
-    public float PlayEreaTop { get => _playEreaTop; set => _playEreaTop = value; }
 
     private void Awake()
     {
@@ -90,10 +87,5 @@ public class Field : MonoBehaviour
         Gizmos.DrawLine(Vertex2, Vertex3);
         Gizmos.DrawLine(Vertex3, Vertex4);
         Gizmos.DrawLine(Vertex4, Vertex1);
-
-        Gizmos.color = Color.blue;
-        var point1 = new Vector3(Vertex1.x, _playEreaTop);
-        var point2 = new Vector3(Vertex3.x, _playEreaTop);
-        Gizmos.DrawLine(point1, point2);
     }
 }

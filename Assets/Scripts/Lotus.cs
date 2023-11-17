@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using System.Xml;
 
 /// <summary>
 /// ò@
@@ -13,6 +14,7 @@ public class Lotus : FieldFollowUpObject
     [SerializeField] Sprite _texture;
 
     Subject<float> _moveSubject = new Subject<float>();
+    bool _isRun = false;
 
     /// <summary>îÒîjâÛéûÇ…åƒÇ—èoÇ∑</summary>
     public Action<Lotus> OnDestroyAction;
@@ -31,7 +33,8 @@ public class Lotus : FieldFollowUpObject
 
     IEnumerator Run()
     {
-        while (true)
+        _isRun = true;
+        while (_isRun)
         {
             yield return new WaitForFixedUpdate();
             var vec = _speed * Time.fixedDeltaTime;

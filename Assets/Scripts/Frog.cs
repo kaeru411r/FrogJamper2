@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine.InputSystem;
 using UniRx;
 using System;
+using InputSystemAgent;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
 
@@ -62,9 +63,11 @@ public class Frog : FieldFollowUpObject
     private new void Start()
     {
         base.Start();
+        InputAgent2.Subscribe("Player", "MousePosition", OnMousePosition);
+        InputAgent2.Subscribe("Player", "Touch", OnTouch);
+
         _joint = GetComponent<Joint2D>();
-        _playerInput.AddListener("Player", "Touch", OnTouch);
-        _playerInput.AddListener("Player", "MousePosition", OnMousePosition);
+        //_playerInput.AddListener("Player", "MousePosition", OnMousePosition);
     }
 
     IEnumerator Targeting()
