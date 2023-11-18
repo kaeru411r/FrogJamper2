@@ -40,7 +40,7 @@ namespace InputSystemAgent
         static List<InputActionMap> _inputMaps;
 
 
-        public static ReadOnlyArray<InputActionMap> InputMaps => _inputMaps.ToArray();
+        public static ReadOnlyCollection<InputActionMap> InputMaps => new ReadOnlyCollection<InputActionMap>(_inputMaps);
         public static ReadOnlyDictionary<InputAction, InputAction.CallbackContext> LastActions =>
             new ReadOnlyDictionary<InputAction, InputAction.CallbackContext>(_lastActions);
 
