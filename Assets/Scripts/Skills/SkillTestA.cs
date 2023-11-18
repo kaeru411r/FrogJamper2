@@ -10,4 +10,5 @@ public class SkillTestA : ISkill
     {
         Debug.Log(_text);
     }
+    public void Update(float time) { }
 }

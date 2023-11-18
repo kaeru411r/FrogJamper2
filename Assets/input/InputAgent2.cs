@@ -11,33 +11,34 @@ using UnityEngine.InputSystem.Utilities;
 namespace InputSystemAgent
 {
 
-    public class InputAgent2
+    public static class InputAgent2
     {
-        static InputAgent2 _instance = new InputAgent2();
-        static Dictionary<InputAction, Subject<InputAction.CallbackContext>> _inputSubjects;
-        //static Dictionary<InputAction, InputAction.CallbackContext> _lastActions;
-        private InputAgent2()
+        static private bool Initialize()
         {
-            _inputActionAssets = new List<InputActionAsset>();
-            foreach (var asset in InputAgentSettings.InputActionAsset)
+            _inputMaps = new List<InputActionMap> ();
+            _inputSubjects = new Dictionary<InputAction, Subject<InputAction.CallbackContext>>();
+            _lastActions = new Dictionary<InputAction, InputAction.CallbackContext>();
+            foreach (var map in new InputActionSystem().asset.actionMaps)
             {
-                foreach (var map in asset.actionMaps)
-                {
-                    map.actionTriggered += OnAction;
-                }
-                _inputSubjects = new Dictionary<InputAction, Subject<InputAction.CallbackContext>>();
-                _inputActionAssets.Add(asset);
-
-                foreach (var action in asset)
+                _inputMaps.Add (map);
+                map.actionTriggered += OnAction;
+                map.Enable();
+                foreach (var action in map)
                 {
                     _inputSubjects.Add(action, new Subject<InputAction.CallbackContext>());
-                    //_lastActions.Add(action, action.);
+                    _lastActions.Add(action, new InputAction.CallbackContext());
                 }
             }
+            return true;
         }
-        List<InputActionAsset> _inputActionAssets;
 
-        public static List<InputActionAsset> InputActionAssets => _instance._inputActionAssets;
+        static bool _isInitialized = Initialize();
+        static Dictionary<InputAction, Subject<InputAction.CallbackContext>> _inputSubjects;
+        static Dictionary<InputAction, InputAction.CallbackContext> _lastActions;
+        static List<InputActionMap> _inputMaps;
+
+
+        public static ReadOnlyArray<InputActionMap> InputMaps => _inputMaps.ToArray();
 
 
         public static IDisposable Subscribe(InputAction inputAction, Action<InputAction.CallbackContext> action)
@@ -55,9 +56,9 @@ namespace InputSystemAgent
         public static IDisposable Subscribe(string actionName, Action<InputAction.CallbackContext> action)
         {
             InputAction inputAction = null;
-            foreach (var asset in InputActionAssets)
+            foreach (var map in InputMaps)
             {
-                inputAction = asset.FindAction(actionName);
+                inputAction = map.FindAction(actionName);
                 if (inputAction != null)
                 {
                     return Subscribe(inputAction, action);
@@ -69,20 +70,25 @@ namespace InputSystemAgent
         public static IDisposable Subscribe(string mapName, string actionName, Action<InputAction.CallbackContext> action)
         {
             InputAction inputAction = null;
-            foreach (var asset in InputActionAssets)
+            foreach (var map in InputMaps)
             {
-                inputAction = asset.FindActionMap(mapName).FindAction(actionName);
-                if (inputAction != null)
+                if (map.name == mapName)
                 {
-                    return Subscribe(inputAction, action);
+                    inputAction = map.FindAction(actionName);
+                    if (inputAction != null)
+                    {
+                        return Subscribe(inputAction, action);
+                    }
                 }
             }
             return null;
         }
 
-        void OnAction(InputAction.CallbackContext context)
+
+
+        static void OnAction(InputAction.CallbackContext context)
         {
-            //_lastActions[context.action] = context;
+            _lastActions[context.action] = context;
             _inputSubjects[context.action]?.OnNext(context);
         }
     }

@@ -8,4 +8,6 @@ public class SetLotus : ISkill
     {
         LotusManager.Instance.Generate(Frog.Instance.transform.position);
     }
+
+    public void Update(float deltaTime) { }
 }
