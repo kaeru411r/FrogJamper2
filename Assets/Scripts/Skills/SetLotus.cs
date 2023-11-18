@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillTestA : SkillBase
+public class SetLotus : SkillBase
 {
-    [SerializeField]
-    string _text;
+    [SerializeField] Lotus _lotus;
+
     override protected void PlayImpl()
     {
-        Debug.Log(_text);
+        throw new System.NotImplementedException();
     }
 }

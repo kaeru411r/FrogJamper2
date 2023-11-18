@@ -15,18 +15,23 @@ namespace InputSystemAgent
     {
         static InputAgent2 _instance = new InputAgent2();
         static Dictionary<InputAction, Subject<InputAction.CallbackContext>> _inputSubjects;
+        //static Dictionary<InputAction, InputAction.CallbackContext> _lastActions;
         private InputAgent2()
         {
             _inputActionAssets = new List<InputActionAsset>();
             foreach (var asset in InputAgentSettings.InputActionAsset)
             {
-                asset.actionMaps[0].actionTriggered += OnAction;
+                foreach (var map in asset.actionMaps)
+                {
+                    map.actionTriggered += OnAction;
+                }
                 _inputSubjects = new Dictionary<InputAction, Subject<InputAction.CallbackContext>>();
                 _inputActionAssets.Add(asset);
 
                 foreach (var action in asset)
                 {
                     _inputSubjects.Add(action, new Subject<InputAction.CallbackContext>());
+                    //_lastActions.Add(action, action.);
                 }
             }
         }
@@ -77,46 +82,9 @@ namespace InputSystemAgent
 
         void OnAction(InputAction.CallbackContext context)
         {
+            //_lastActions[context.action] = context;
             _inputSubjects[context.action]?.OnNext(context);
         }
-
-
-        [CreateAssetMenu(menuName = "ScriptableObjects/InputAgentSettings")]
-        class InputAgentSettings : ScriptableObject
-        {
-            static Dictionary<InputActionAsset, int> _inputActionAssets = new Dictionary<InputActionAsset, int>();
-
-            public static ReadOnlyArray<InputActionAsset> InputActionAsset => _inputActionAssets.Keys.ToArray();
-
-
-            public InputActionAsset[] Actions = new InputActionAsset[0];
-
-            private void OnEnable()
-            {
-                Add();
-            }
-
-            void Add()
-            {
-                foreach (var inputActionAsset in Actions)
-                {
-                    if (inputActionAsset == null) { continue; }
-                    if (_inputActionAssets.ContainsKey(inputActionAsset))
-                    {
-                        _inputActionAssets[inputActionAsset]++;
-                    }
-                    else
-                    {
-                        _inputActionAssets.Add(inputActionAsset, 1);
-                    }
-                }
-            }
-
-        }
-
-
-
-
     }
 
 }

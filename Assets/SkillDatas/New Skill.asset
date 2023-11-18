@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: New Skill
   m_EditorClassIdentifier: 
   _skills:
-  - rid: 311392945879384067
+  - rid: 311393104188145665
   references:
     version: 2
     RefIds:
-    - rid: 311392945879384067
+    - rid: 311393104188145665
       type: {class: SkillTestA, ns: , asm: Assembly-CSharp}
       data:
-        _text: skill1
+        _coolTime: 2
+        _text: asdas

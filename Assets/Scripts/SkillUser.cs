@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using InputSystemAgent;
+using UniRx;
 
 /// <summary>
 /// スキルを使用する
@@ -14,8 +16,6 @@ public class SkillUser : MonoBehaviour
     [SerializeField] Skill _skill2;
     [Tooltip("スキル3")]
     [SerializeField] Skill _skill3;
-    [Tooltip("PlayerInput")]
-    [SerializeField] PlayerInput _playerInput;
 
     public Skill Skill1 { get => _skill1; set => _skill1 = value; }
     public Skill Skill2 { get => _skill2; set => _skill2 = value; }
@@ -23,30 +23,48 @@ public class SkillUser : MonoBehaviour
 
     private void Start()
     {
-        _playerInput.AddListener("Player", "Skill1", OnSkill1);
-        _playerInput.AddListener("Player", "Skill2", OnSkill2);
-        _playerInput.AddListener("Player", "Skill3", OnSkill3);
+        InputAgent2.Subscribe("Player", "Skill1", OnSkill1).AddTo(this);
+        InputAgent2.Subscribe("Player", "Skill2", OnSkill2).AddTo(this);
+        InputAgent2.Subscribe("Player", "Skill3", OnSkill3).AddTo(this);
+    }
+
+    private void Update()
+    {
+        _skill1.Cooling(Time.deltaTime);
+        _skill2.Cooling(Time.deltaTime);
+        _skill3.Cooling(Time.deltaTime);
     }
 
     void OnSkill1(InputAction.CallbackContext callback)
     {
         if (callback.phase == InputActionPhase.Canceled)
         {
-            _skill1.Play();
+            if (_skill1.IsReady)
+            {
+                _skill1.Play();
+            }
         }
     }
     void OnSkill2(InputAction.CallbackContext callback)
     {
         if (callback.phase == InputActionPhase.Canceled)
         {
-            _skill2.Play();
+            if (_skill2.IsReady)
+            {
+                _skill2.Play();
+            }
         }
     }
     void OnSkill3(InputAction.CallbackContext callback)
     {
         if (callback.phase == InputActionPhase.Canceled)
         {
-            _skill3.Play();
+            if (_skill3.IsReady)
+            {
+                _skill3.Play();
+            }
         }
     }
+
+
 }

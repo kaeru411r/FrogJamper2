@@ -16,10 +16,10 @@ namespace InputSystemAgent
         private InputAgent()
         {
             var system = new InputActionSystem();
-            system.Player.SetCallbacks(this);
-            system.UI.SetCallbacks(this);
-            system.Player.Enable();
-            system.UI.Enable();
+            //system.Player.SetCallbacks(this);
+            //system.UI.SetCallbacks(this);
+            //system.Player.Enable();
+            //system.UI.Enable();
             _inputActionAsset = system.asset;
             _inputSubjects = new Dictionary<InputAction, Subject<InputAction.CallbackContext>>();
 
