@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 /// </summary>
 public class LotusManager : MonoBehaviour
 {
+    static LotusManager instance;
+
     [Tooltip("¶¬‚·‚é˜@")]
     [SerializeField] Lotus _lotus;
     [Tooltip("˜@‚ÌÅ’á–‡”")]
@@ -30,6 +32,8 @@ public class LotusManager : MonoBehaviour
 
     List<Lotus> _lotusList = new List<Lotus>();
     float _time = 0.0f;
+
+    public static LotusManager Instance => instance;
 
     /// <summary>Œ»İ‘¶İ‚·‚é˜@‚Ì–‡”</summary>
     public List<Lotus> LotusList { get => _lotusList; }
@@ -90,6 +94,18 @@ public class LotusManager : MonoBehaviour
     /// <summary>
     /// ˜@¶¬
     /// ˆø”‚Í¶¬‚Ì’Š‘I”ÍˆÍ
+    ///</summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public Lotus Generate(Vector2 position)
+    {
+        return Generate(position, position);
+    }
+
+
+    /// <summary>
+    /// ˜@¶¬
+    /// ˆø”‚Í¶¬‚Ì’Š‘I”ÍˆÍ
     /// </summary>
     /// <param name="leftTop"></param>
     /// <param name="rightBottom"></param>
@@ -122,6 +138,11 @@ public class LotusManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void Awake()
+    {
+        instance = this;
     }
 
     IEnumerator GenerateLoop()

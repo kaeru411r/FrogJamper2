@@ -15,6 +15,8 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(Joint2D))]
 public class Frog : FieldFollowUpObject
 {
+    static Frog _instance;
+
     [Tooltip("スピード")]
     [SerializeField] float _speed;
     [SerializeField] PlayerInput _playerInput;
@@ -29,6 +31,8 @@ public class Frog : FieldFollowUpObject
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
     public IObservable<FrogState> StateSubject => _frogState;
+
+    public static Frog Instance => _instance;
 
     void OnMousePosition(InputAction.CallbackContext callback)
     {
@@ -58,6 +62,10 @@ public class Frog : FieldFollowUpObject
     public void PlayStart()
     {
         StartCoroutine(Targeting());
+    }
+    private void Awake()
+    {
+        _instance = this;
     }
 
     private new void Start()
