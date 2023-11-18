@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SetLotus : SkillBase
+public class SetLotus : ISkill
 {
     [SerializeField] Lotus _lotus;
 
-    override protected void PlayImpl()
+    public void Play()
     {
         throw new System.NotImplementedException();
     }

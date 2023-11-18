@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillTestA : SkillBase
+public class SkillTestA : ISkill
 {
     [SerializeField]
     string _text;
-    override protected void PlayImpl()
+    public void Play()
     {
         Debug.Log(_text);
     }

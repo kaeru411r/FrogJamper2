@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455049ada11d2ed45bff69f034c43e22, type: 3}
   m_Name: New Input Agent Settings
   m_EditorClassIdentifier: 
-  Actions: []
+  Actions:
+  - {fileID: -944628639613478452, guid: d03c5404459173344aabd717a07bad4b, type: 3}
