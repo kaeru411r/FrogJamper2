@@ -2,8 +2,10 @@ using InputSystemAgent;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
@@ -15,12 +17,12 @@ namespace InputSystemAgent
     {
         static private bool Initialize()
         {
-            _inputMaps = new List<InputActionMap> ();
+            _inputMaps = new List<InputActionMap>();
             _inputSubjects = new Dictionary<InputAction, Subject<InputAction.CallbackContext>>();
             _lastActions = new Dictionary<InputAction, InputAction.CallbackContext>();
             foreach (var map in new InputActionSystem().asset.actionMaps)
             {
-                _inputMaps.Add (map);
+                _inputMaps.Add(map);
                 map.actionTriggered += OnAction;
                 map.Enable();
                 foreach (var action in map)
@@ -39,6 +41,8 @@ namespace InputSystemAgent
 
 
         public static ReadOnlyArray<InputActionMap> InputMaps => _inputMaps.ToArray();
+        public static ReadOnlyDictionary<InputAction, InputAction.CallbackContext> LastActions =>
+            new ReadOnlyDictionary<InputAction, InputAction.CallbackContext>(_lastActions);
 
 
         public static IDisposable Subscribe(InputAction inputAction, Action<InputAction.CallbackContext> action)
