@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fc37eba1ee193c4aacfea1d4450a6f3, type: 3}
   m_Name: New Skill
   m_EditorClassIdentifier: 
-  _coolTime: 2
+  _coolTime: 3
   _skills:
-  - rid: 311393104188145667
+  - rid: 311393104188145668
   references:
     version: 2
     RefIds:
-    - rid: 311393104188145667
-      type: {class: SkillTestA, ns: , asm: Assembly-CSharp}
-      data:
-        _text: skill1
+    - rid: 311393104188145668
+      type: {class: SetLotus, ns: , asm: Assembly-CSharp}

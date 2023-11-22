@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fc37eba1ee193c4aacfea1d4450a6f3, type: 3}
   m_Name: New Skill 2
   m_EditorClassIdentifier: 
+  _coolTime: 0.5
   _skills:
   - rid: 311392945879384067
   references:

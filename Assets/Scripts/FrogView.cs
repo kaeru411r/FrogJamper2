@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
-
+using UnityEngine.UI;
 
 /// <summary>
 /// カエルの見た目
@@ -17,6 +17,8 @@ public class FrogView : MonoBehaviour
     [SerializeField] Sprite _jump;
     [Tooltip("溺れてるカエル")]
     [SerializeField] Sprite _drown;
+    [Tooltip("着地予想点")]
+    [SerializeField] Image _sight;
 
     SpriteRenderer _spriteRenderer;
 
@@ -28,8 +30,10 @@ public class FrogView : MonoBehaviour
 
     private void Start()
     {
-        if (TryGetComponent(out Frog frog)) {
+        if (TryGetComponent(out Frog frog))
+        {
             frog.StateSubject.Subscribe(Alteration).AddTo(this);
+            frog.JumpDistance.Subscribe(Sight).AddTo(this);
         }
     }
 
@@ -50,5 +54,24 @@ public class FrogView : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void Sight(float distance)
+    {
+        if (distance <= 0)
+        {
+            _sight.enabled = false;
+            return;
+        }
+        else
+        {
+            _sight.enabled = true;
+            var x = distance * Mathf.Sin(-transform.eulerAngles.z /180 * Mathf.PI);
+            var y = distance * Mathf.Cos(-transform.eulerAngles.z / 180 * Mathf.PI);
+            var pos = transform.position + new Vector3(x, y, 0);
+            _sight.transform.position = Camera.main.WorldToScreenPoint(pos);
+        }
+
+
     }
 }

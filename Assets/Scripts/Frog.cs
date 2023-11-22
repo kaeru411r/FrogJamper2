@@ -19,10 +19,11 @@ public class Frog : FieldFollowUpObject
 
     [Tooltip("スピード")]
     [SerializeField] float _speed;
+    [SerializeField] float _chargeSpeed;
     [SerializeField] PlayerInput _playerInput;
 
     Vector2 _targetPosition;
-    float _distance;
+    ReactiveProperty<float> _distance = new ReactiveProperty<float>();
     List<Lotus> _touchingLotuses = new List<Lotus>();
     bool _isTouching = false;
     ReactiveProperty<FrogState> _frogState = new ReactiveProperty<FrogState>(FrogState.Stand);
@@ -31,6 +32,7 @@ public class Frog : FieldFollowUpObject
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
     public IObservable<FrogState> StateSubject => _frogState;
+    public IObservable<float> JumpDistance => _distance;
 
     public static Frog Instance => _instance;
 
@@ -84,9 +86,10 @@ public class Frog : FieldFollowUpObject
         {
             yield return null;
 
-            var direction = _targetPosition - (Vector2)transform.position;
+            var direction = (_targetPosition - (Vector2)transform.position).normalized;
             transform.eulerAngles = new Vector3(0, 0, -Mathf.Atan2(direction.x, direction.y) / Mathf.PI * 180);
-            _distance += Time.deltaTime;
+            _distance.Value += Time.deltaTime * _chargeSpeed;
+            Debug.Log(_distance.Value);
 
             if (!_isTouching)
             {
@@ -104,14 +107,14 @@ public class Frog : FieldFollowUpObject
         Rigidbody.simulated = true;
         _joint.enabled = false;
         _frogState.Value = FrogState.Jump;
-        while (_distance > 0)
+        while (_distance.Value > 0)
         {
             yield return new WaitForFixedUpdate();
             float dis = _speed * Time.fixedDeltaTime;
-            dis = Mathf.Min(dis, _distance);
+            dis = Mathf.Min(dis, _distance.Value);
             Rigidbody.MovePosition(((Vector2)transform.position + (direction * dis)));
 
-            _distance -= dis;
+            _distance.Value -= dis;
         }
 
         Landing();
