@@ -6,8 +6,7 @@ public class SetLotus : ISkill
 {
     public void Play()
     {
+        Debug.Log("LotusSet");
         LotusManager.Instance.Generate(Frog.Instance.transform.position);
     }
-
-    public void Update(float deltaTime) { }
 }

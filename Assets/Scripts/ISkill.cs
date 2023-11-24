@@ -8,5 +8,4 @@ using UnityEngine;
 public interface ISkill
 {
     public void Play();
-    public void Update(float deltaTime);
 }

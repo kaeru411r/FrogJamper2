@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8fc37eba1ee193c4aacfea1d4450a6f3, type: 3}
-  m_Name: New Skill
+  m_Name: ChargeBoost
   m_EditorClassIdentifier: 
-  _coolTime: 3
+  _coolTime: 20
   _skills:
-  - rid: 311393104188145668
+  - rid: 311393241022332929
   references:
     version: 2
     RefIds:
-    - rid: 311393104188145668
-      type: {class: SetLotus, ns: , asm: Assembly-CSharp}
+    - rid: 311393241022332929
+      type: {class: ChargeBoost, ns: , asm: Assembly-CSharp}
+      data:
+        _time: 5
+        _boost: 1.3

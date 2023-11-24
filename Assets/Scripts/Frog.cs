@@ -31,10 +31,12 @@ public class Frog : FieldFollowUpObject
 
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
+    public float ChargeSpeed { get => _chargeSpeed; set => _chargeSpeed = value; }
     public IObservable<FrogState> StateSubject => _frogState;
     public IObservable<float> JumpDistance => _distance;
 
     public static Frog Instance => _instance;
+
 
     void OnMousePosition(InputAction.CallbackContext callback)
     {
@@ -77,7 +79,6 @@ public class Frog : FieldFollowUpObject
         InputAgent2.Subscribe("Player", "Touch", OnTouch);
 
         _joint = GetComponent<Joint2D>();
-        //_playerInput.AddListener("Player", "MousePosition", OnMousePosition);
     }
 
     IEnumerator Targeting()
@@ -89,7 +90,6 @@ public class Frog : FieldFollowUpObject
             var direction = (_targetPosition - (Vector2)transform.position).normalized;
             transform.eulerAngles = new Vector3(0, 0, -Mathf.Atan2(direction.x, direction.y) / Mathf.PI * 180);
             _distance.Value += Time.deltaTime * _chargeSpeed;
-            Debug.Log(_distance.Value);
 
             if (!_isTouching)
             {
@@ -118,7 +118,6 @@ public class Frog : FieldFollowUpObject
         }
 
         Landing();
-        Debug.Log(9);
     }
 
     private void Landing()

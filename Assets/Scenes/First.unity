@@ -251,8 +251,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skill1: {fileID: 11400000, guid: cf4b261689064764c88eaf2f97f265ad, type: 2}
-  _skill2: {fileID: 11400000, guid: b0c4b522e89eada498d100d418fcd7a2, type: 2}
-  _skill3: {fileID: 11400000, guid: 38aa433cb1b2d3440b7d3e97b9234beb, type: 2}
+  _skill2: {fileID: 11400000, guid: 3e1acc0be34481542876fb0fcf520ffb, type: 2}
+  _skill3: {fileID: 11400000, guid: 8dd49bcaa26f86f4cb181963bcb8ca3e, type: 2}
 --- !u!1 &1090041376
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,7 +462,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae9f96074243bc4aaca7ed4e8c94c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1
+  _speed: 5
+  _chargeSpeed: 5
   _playerInput: {fileID: 1119181738}
 --- !u!212 &1119181740
 SpriteRenderer:

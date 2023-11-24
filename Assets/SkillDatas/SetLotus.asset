@@ -10,15 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8fc37eba1ee193c4aacfea1d4450a6f3, type: 3}
-  m_Name: New Skill 1
+  m_Name: SetLotus
   m_EditorClassIdentifier: 
-  _coolTime: 1
+  _coolTime: 30
   _skills:
-  - rid: 311392945879384067
+  - rid: 311393104188145668
   references:
     version: 2
     RefIds:
-    - rid: 311392945879384067
-      type: {class: SkillTestA, ns: , asm: Assembly-CSharp}
-      data:
-        _text: skill2
+    - rid: 311393104188145668
+      type: {class: SetLotus, ns: , asm: Assembly-CSharp}
