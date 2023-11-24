@@ -12,10 +12,9 @@ using UnityEngine.UIElements;
 /// <summary>
 /// カエル
 /// </summary>
-[RequireComponent(typeof(Joint2D))]
-public class Frog : FieldFollowUpObject
+[RequireComponent(typeof(Joint2D), typeof(Rigidbody2D))]
+public class Frog : SingletonMono<Frog>
 {
-    static Frog _instance;
 
     [Tooltip("スピード")]
     [SerializeField] float _speed;
@@ -28,14 +27,13 @@ public class Frog : FieldFollowUpObject
     bool _isTouching = false;
     ReactiveProperty<FrogState> _frogState = new ReactiveProperty<FrogState>(FrogState.Stand);
     Joint2D _joint;
+    Rigidbody2D _rigidBody;
 
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
     public float ChargeSpeed { get => _chargeSpeed; set => _chargeSpeed = value; }
     public IObservable<FrogState> StateSubject => _frogState;
     public IObservable<float> JumpDistance => _distance;
-
-    public static Frog Instance => _instance;
 
 
     void OnMousePosition(InputAction.CallbackContext callback)
@@ -67,14 +65,9 @@ public class Frog : FieldFollowUpObject
     {
         StartCoroutine(Targeting());
     }
-    private void Awake()
-    {
-        _instance = this;
-    }
 
-    private new void Start()
+    private void Start()
     {
-        base.Start();
         InputAgent2.Subscribe("Player", "MousePosition", OnMousePosition);
         InputAgent2.Subscribe("Player", "Touch", OnTouch);
 
@@ -102,9 +95,7 @@ public class Frog : FieldFollowUpObject
 
     IEnumerator Jumping(Vector2 direction)
     {
-        //transform.parent = null;
-        Rigidbody.velocity = Vector2.zero;
-        Rigidbody.simulated = true;
+        _rigidBody.velocity = Vector2.zero;
         _joint.enabled = false;
         _frogState.Value = FrogState.Jump;
         while (_distance.Value > 0)
@@ -112,7 +103,7 @@ public class Frog : FieldFollowUpObject
             yield return new WaitForFixedUpdate();
             float dis = _speed * Time.fixedDeltaTime;
             dis = Mathf.Min(dis, _distance.Value);
-            Rigidbody.MovePosition(((Vector2)transform.position + (direction * dis)));
+            _rigidBody.MovePosition(((Vector2)transform.position + (direction * dis)));
 
             _distance.Value -= dis;
         }
@@ -133,7 +124,6 @@ public class Frog : FieldFollowUpObject
 
             transform.localPosition = Vector3.zero;
             transform.position = lotus.transform.position;
-            //Rigidbody.simulated = false;
             _joint.enabled = true;
             _joint.connectedBody = lotus.Rigidbody;
         }

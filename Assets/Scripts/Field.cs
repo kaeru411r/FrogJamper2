@@ -7,25 +7,8 @@ using System;
 /// <summary>
 /// フィールド
 /// </summary>
-public class Field : MonoBehaviour
+public class Field : SingletonMono<Field>
 {
-    static Field _instance;
-
-    public static Field Instance
-    {
-        get
-        {
-            if (!_instance)
-            {
-                _instance = FindAnyObjectByType<Field>();
-                if (!_instance)
-                {
-                    return null;
-                }
-            }
-            return _instance;
-        }
-    }
 
     [Tooltip("エリア左上")]
     [SerializeField] Vector2 _topLeft;
@@ -66,13 +49,6 @@ public class Field : MonoBehaviour
             _topLeft.x = value.x;
             _bottomRight.y = value.y;
         }
-    }
-
-
-    private void Awake()
-    {
-        Destroy(_instance);
-        _instance = this;
     }
 
     private void OnDrawGizmosSelected()
