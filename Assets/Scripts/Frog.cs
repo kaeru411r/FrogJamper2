@@ -68,6 +68,7 @@ public class Frog : SingletonMono<Frog>
 
     private void Start()
     {
+        _rigidBody = GetComponent<Rigidbody2D>();
         InputAgent2.Subscribe("Player", "MousePosition", OnMousePosition);
         InputAgent2.Subscribe("Player", "Touch", OnTouch);
 
