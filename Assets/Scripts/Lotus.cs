@@ -8,49 +8,36 @@ using System.Xml;
 /// <summary>
 /// 蓮
 /// </summary>
-public class Lotus : FieldFollowUpObject
+[RequireComponent(typeof(Rigidbody2D))]
+public class Lotus : MonoBehaviour
 {
     [SerializeField] Vector2 _speed = Vector2.zero;
     [SerializeField] Sprite _texture;
 
-    Subject<float> _moveSubject = new Subject<float>();
+    Rigidbody2D _rigidbody;
     bool _isRun = false;
+    Subject<Lotus> _onDestroyed = new Subject<Lotus>();
 
     /// <summary>非破壊時に呼び出す</summary>
-    public Action<Lotus> OnDestroyAction;
-    /// <summary>移動ベクトル</summary>
-    public IObservable<float> MoveSubject { get => _moveSubject; }
+    public IObservable<Lotus> OnDestroyed => _onDestroyed;
     /// <summary>移動速度</summary>
     public Vector2 Speed { get => _speed; set => _speed = value; }
+    public Rigidbody2D Rigidbody => _rigidbody;
 
 
     /// <summary>移動開始</summary>
     public void RunStart()
     {
-        StartCoroutine(Run());
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody.velocity = _speed;
+        Field.Instance.EreaSubject(transform)
+            .Where(state => state == EreaState.Off)
+            .Subscribe(_ => Destroy(gameObject))
+            .AddTo(this);
     }
-
-
-    IEnumerator Run()
-    {
-        _isRun = true;
-        while (_isRun)
-        {
-            yield return new WaitForFixedUpdate();
-            var vec = _speed * Time.fixedDeltaTime;
-            Rigidbody.MovePosition((Vector2)transform.position + vec);
-            _moveSubject.OnNext(vec.y);
-        }
-    }
-
-
-    protected override void FieldOut()
-    {
-        Destroy(gameObject);
-    }
-
     private void OnDestroy()
     {
-        OnDestroyAction?.Invoke(this);
+        _onDestroyed.OnNext(this);
+        _onDestroyed.OnCompleted();
     }
 }

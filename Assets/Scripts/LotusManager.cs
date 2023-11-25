@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -129,7 +130,9 @@ public class LotusManager : MonoBehaviour
             var lotus = Instantiate(_lotus, point, Quaternion.identity);
             _lotusList.Add(lotus);
 
-            lotus.OnDestroyAction += (value) => _lotusList.Remove(value);
+            lotus.OnDestroyed
+                .Subscribe(value => _lotusList.Remove(value))
+                .AddTo(this);
 
             var speed = Random.Range(_lowerSpeed, _upperSpeed);
             lotus.Speed = Vector2.down * speed;

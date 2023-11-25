@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
+using System.Xml;
+using UniRx.Triggers;
 
 /// <summary>
 /// フィールド
@@ -18,7 +20,26 @@ public class Field : SingletonMono<Field>
     Subject<float> _moveSubject = new Subject<float>();
     float _position = 0.0f;
 
-    public IObservable<float> MoveSubject { get { return _moveSubject; } }
+    public IObservable<float> MoveSubject => _moveSubject;
+
+    public IObservable<EreaState> EreaSubject(Transform transform)
+    {
+        var state = EreaCheck(transform);
+        var subject = gameObject.UpdateAsObservable()
+            .Where(_ =>
+            {
+                var buf = EreaCheck(transform);
+                if( buf != state)
+                {
+                    state = buf;
+                    return true;
+                }
+                return false;
+                })
+            .Select(_ => state);
+
+        return subject;
+    }
 
     public float Position
     {
@@ -49,6 +70,34 @@ public class Field : SingletonMono<Field>
             _topLeft.x = value.x;
             _bottomRight.y = value.y;
         }
+    }
+
+    public EreaState EreaCheck(Vector2 position)
+    {
+
+        var result = EreaState.Off;
+
+        var left = Mathf.Min(Vertex1.x, Vertex3.x);
+        var right = Mathf.Max(Vertex1.x, Vertex3.x);
+        var top = Mathf.Max(Vertex1.y, Vertex3.y);
+        var bottom = Mathf.Min(Vertex1.y, Vertex3.y);
+
+        if (position.x >= left && position.x <= right && position.y >= bottom && position.y <= top)
+        {
+            result = EreaState.Stay;
+        }
+
+        var dir1 = Vertex1 - position;
+        var dir2 = Vertex3 - position;
+        Debug.DrawRay(position, dir1);
+        Debug.DrawRay(position, dir2);
+
+        return result;
+    }
+
+    public EreaState EreaCheck(Transform transform)
+    {
+        return EreaCheck((Vector2)transform.position);
     }
 
     private void OnDrawGizmosSelected()
