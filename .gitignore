@@ -72,6 +72,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 Assets/AssetStoreTools/*
 Assets/AssetStoreTools.meta
+Assets/TextMesh Pro/*
+Assets/TextMesh Pro.meta
 
 Plugins
 Plugins/*
