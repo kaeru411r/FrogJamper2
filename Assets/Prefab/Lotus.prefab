@@ -137,6 +137,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: {x: 0, y: -2}
   _texture: {fileID: 21300000, guid: 9f418bdd507a8ff40ab49e762ff60f6c, type: 3}
+  _hierarchy: 0
+  _score: 100
 --- !u!50 &2439415539902783745
 Rigidbody2D:
   serializedVersion: 4

@@ -32,7 +32,7 @@ public class Frog : SingletonMono<Frog>
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
     public float ChargeSpeed { get => _chargeSpeed; set => _chargeSpeed = value; }
-    public IObservable<FrogState> StateSubject => _frogState;
+    public IObservable<FrogState> OnState => _frogState;
     public IObservable<float> JumpDistance => _distance;
 
 
@@ -127,6 +127,15 @@ public class Frog : SingletonMono<Frog>
             transform.position = lotus.transform.position;
             _joint.enabled = true;
             _joint.connectedBody = lotus.Rigidbody;
+
+            lotus.Ride();
+            var onLotusDestroy = lotus.OnDestroyed
+                .Subscribe(_ => Drowing())
+                .AddTo(this);
+
+            _frogState
+                .Where(state => state == FrogState.Jump)
+                .Subscribe(_ => onLotusDestroy.Dispose());
         }
         else
         {

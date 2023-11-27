@@ -32,7 +32,7 @@ public class FrogView : MonoBehaviour
     {
         if (TryGetComponent(out Frog frog))
         {
-            frog.StateSubject.Subscribe(Alteration).AddTo(this);
+            frog.OnState.Subscribe(Alteration).AddTo(this);
             frog.JumpDistance.Subscribe(Sight).AddTo(this);
         }
     }
