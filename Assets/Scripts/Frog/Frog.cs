@@ -187,7 +187,8 @@ public class Frog : SingletonMono<Frog>
         var result = hits?.Select(value => value.collider.gameObject.GetComponent<IRideable>())
                             .Where(value => value != null)
                             .ToArray();
-        return result;
+
+        return result.Length > 0 ? result : null;
     }
 
     bool TryGetRideables(out IRideable[] rideables)

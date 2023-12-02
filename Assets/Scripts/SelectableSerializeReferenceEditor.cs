@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+#if UNITY_EDITOR
 /// <summary>
 /// インスペクターからインターフェースの継承クラスを選択して扱うためのエディター拡張
 /// 要研究
@@ -109,3 +110,5 @@ public sealed class SelectableSerializeReferenceAttributeDrawer : PropertyDrawer
         }
     }
 }
+
+#endif
