@@ -79,7 +79,6 @@ public class Frog : SingletonMono<Frog>
         if (TryGetComponent(out _collider))
         {
             _type = _collider.GetType();
-            Debug.Log(_type);
         }
     }
 
@@ -166,18 +165,29 @@ public class Frog : SingletonMono<Frog>
 
     IRideable[] GetRideables()
     {
+        RaycastHit2D[] hits = null;
+        var pos = (Vector2)_collider.transform.position + _collider.offset;
+
         if (_type == typeof(BoxCollider2D))
         {
             var box = (BoxCollider2D)_collider;
-            var pos = (Vector2)box.transform.position + box.offset;
-            var hits = Physics2D.BoxCastAll(pos, box.size, box.transform.eulerAngles.z, Vector2.zero, 1.0f);
-            var result = hits.Select(value => value.collider.gameObject.GetComponent<IRideable>())
+            hits = Physics2D.BoxCastAll(pos, box.size, box.transform.eulerAngles.z, Vector2.zero, 1.0f);
+        }
+        else if(_type == typeof(CircleCollider2D))
+        {
+            var circle = (CircleCollider2D)_collider;
+            hits = Physics2D.CircleCastAll(pos, circle.radius, Vector2.zero);
+        }
+        else if(_type == typeof(CapsuleCollider2D))
+        {
+            var capsule = (CapsuleCollider2D)_collider;
+            hits = Physics2D.CapsuleCastAll(pos, capsule.size, capsule.direction, capsule.transform.eulerAngles.z, Vector2.zero);
+        }
+
+        var result = hits?.Select(value => value.collider.gameObject.GetComponent<IRideable>())
                             .Where(value => value != null)
                             .ToArray();
-
-            return result.Length > 0 ? result : null;
-        }
-        return null;
+        return result;
     }
 
     bool TryGetRideables(out IRideable[] rideables)
