@@ -131,6 +131,8 @@ public class LotusManager : MonoBehaviour
             _lotusList.Add(lotus);
 
             lotus.OnDestroyed
+                .Select(value => value as Lotus)
+                .Where(lotus => lotus != null)
                 .Subscribe(value => _lotusList.Remove(value))
                 .AddTo(this);
 

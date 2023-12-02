@@ -25,7 +25,8 @@ public class FieldFollowUpObject : MonoBehaviour
 
     void Move(float distance)
     {
-        Rigidbody.MovePosition((Vector2)transform.position + (Vector2.down * distance));
+        transform.Translate(Vector2.down * distance);
+        //Rigidbody.MovePosition((Vector2)transform.position + ());
     }
 
 }

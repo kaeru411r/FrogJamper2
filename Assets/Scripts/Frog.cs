@@ -20,14 +20,17 @@ public class Frog : SingletonMono<Frog>
     [SerializeField] float _speed;
     [SerializeField] float _chargeSpeed;
     [SerializeField] PlayerInput _playerInput;
+    [Tooltip("高さ制限")]
+    [SerializeField] float _highest;
 
     Vector2 _targetPosition;
     ReactiveProperty<float> _distance = new ReactiveProperty<float>();
-    List<Lotus> _touchingLotuses = new List<Lotus>();
     bool _isTouching = false;
     ReactiveProperty<FrogState> _frogState = new ReactiveProperty<FrogState>(FrogState.Stand);
     Joint2D _joint;
     Rigidbody2D _rigidBody;
+    Type _type;
+    Collider2D _collider;
 
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
@@ -73,6 +76,11 @@ public class Frog : SingletonMono<Frog>
         InputAgent2.Subscribe("Player", "Touch", OnTouch);
 
         _joint = GetComponent<Joint2D>();
+        if (TryGetComponent(out _collider))
+        {
+            _type = _collider.GetType();
+            Debug.Log(_type);
+        }
     }
 
     IEnumerator Targeting()
@@ -101,11 +109,16 @@ public class Frog : SingletonMono<Frog>
         _frogState.Value = FrogState.Jump;
         while (_distance.Value > 0)
         {
-            yield return new WaitForFixedUpdate();
-            float dis = _speed * Time.fixedDeltaTime;
+            yield return null;
+            Debug.DrawRay(transform.position, direction * 100);
+            float dis = _speed * Time.deltaTime;
             dis = Mathf.Min(dis, _distance.Value);
-            _rigidBody.MovePosition(((Vector2)transform.position + (direction * dis)));
+            transform.Translate(direction * dis, Space.World);
 
+            if (transform.position.y > _highest)
+            {
+                Field.Instance.Position += transform.position.y - _highest;
+            }
             _distance.Value -= dis;
         }
 
@@ -114,22 +127,22 @@ public class Frog : SingletonMono<Frog>
 
     private void Landing()
     {
-        if (_touchingLotuses.Count > 0)
+        if (TryGetRideables(out IRideable[] rideables))
         {
+            var rideable = rideables
+                .OrderByDescending(rideable => Vector2.Distance(transform.position, rideable.Transform.position))
+                .FirstOrDefault();
             _frogState.Value = FrogState.Stand;
-            _touchingLotuses = _touchingLotuses.OrderByDescending(
-                lotus => Vector2.Distance(transform.position, lotus.transform.position))
-                .ToList();
 
-            var lotus = _touchingLotuses.FirstOrDefault();
 
             transform.localPosition = Vector3.zero;
-            transform.position = lotus.transform.position;
+            transform.position = rideable.Transform.position;
             _joint.enabled = true;
-            _joint.connectedBody = lotus.Rigidbody;
+            _joint.connectedBody = rideable.Rigidbody;
 
-            lotus.Ride();
-            var onLotusDestroy = lotus.OnDestroyed
+            rideable.Ride();
+
+            var onLotusDestroy = rideable.OnDestroyed
                 .Subscribe(_ => Drowing())
                 .AddTo(this);
 
@@ -145,22 +158,39 @@ public class Frog : SingletonMono<Frog>
 
     }
 
+
     private void Drowing()
     {
         _frogState.Value = FrogState.Drown;
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    IRideable[] GetRideables()
     {
-        if (collision.gameObject.TryGetComponent<Lotus>(out var lotus))
+        if (_type == typeof(BoxCollider2D))
         {
-            _touchingLotuses.Add(lotus);
+            var box = (BoxCollider2D)_collider;
+            var pos = (Vector2)box.transform.position + box.offset;
+            var hits = Physics2D.BoxCastAll(pos, box.size, box.transform.eulerAngles.z, Vector2.zero, 1.0f);
+            var result = hits.Select(value => value.collider.gameObject.GetComponent<IRideable>())
+                            .Where(value => value != null)
+                            .ToArray();
+
+            return result.Length > 0 ? result : null;
         }
+        return null;
     }
-    private void OnTriggerExit2D(Collider2D collision)
+
+    bool TryGetRideables(out IRideable[] rideables)
     {
-        if (collision.gameObject.TryGetComponent<Lotus>(out var lotus))
-        {
-            _touchingLotuses.Remove(lotus);
-        }
+        rideables = GetRideables();
+        return rideables != null;
+    }
+    private void OnDrawGizmosSelected()
+    {
+        var pos1 = new Vector2(Field.Instance.Vertex1.x, _highest);
+        var pos2 = new Vector2(Field.Instance.Vertex3.x, _highest);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(pos1, pos2);
     }
 }

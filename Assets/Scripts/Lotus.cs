@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System.Xml;
+using UniRx.Triggers;
 
 /// <summary>
 /// ˜@
@@ -17,15 +18,15 @@ public class Lotus : MonoBehaviour, IRideable
     [SerializeField] int _score = 0;
 
     Rigidbody2D _rigidbody;
-    Subject<Lotus> _onDestroyed = new Subject<Lotus>();
+    Subject<IRideable> _onDestroyed = new Subject<IRideable>();
     bool _isRided = false;
 
     /// <summary>”ñ”j‰ó‚ÉŒÄ‚Ño‚·</summary>
-    public IObservable<Lotus> OnDestroyed => _onDestroyed;
+    public IObservable<IRideable> OnDestroyed => _onDestroyed;
     /// <summary>ˆÚ“®‘¬“x</summary>
     public Vector2 Speed { get => _speed; set => _speed = value; }
     public Rigidbody2D Rigidbody => _rigidbody;
-
+    public Transform Transform => transform;
     public int Hierarchy => _hierarchy;
 
     public void Ride()
@@ -42,11 +43,14 @@ public class Lotus : MonoBehaviour, IRideable
     public void RunStart()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _rigidbody.velocity = _speed;
+        //_rigidbody.velocity = _speed;
         _rigidbody.bodyType = RigidbodyType2D.Kinematic;
         Field.Instance.EreaSubject(transform)
             .Where(state => state == EreaState.Off)
             .Subscribe(_ => Destroy(gameObject))
+            .AddTo(this);
+        gameObject.FixedUpdateAsObservable()
+            .Subscribe(_ => _rigidbody.MovePosition(transform.position + (Vector3)_speed * Time.fixedDeltaTime))
             .AddTo(this);
     }
     private void OnDestroy()
