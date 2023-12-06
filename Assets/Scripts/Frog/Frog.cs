@@ -22,6 +22,8 @@ public class Frog : SingletonMono<Frog>
     [SerializeField] PlayerInput _playerInput;
     [Tooltip("çÇÇ≥êßå¿")]
     [SerializeField] float _highest;
+    [Tooltip("çÇÇ≥êßå¿")]
+    [SerializeField] float _lowest;
 
     Vector2 _targetPosition;
     ReactiveProperty<float> _distance = new ReactiveProperty<float>();
@@ -79,6 +81,14 @@ public class Frog : SingletonMono<Frog>
         if (TryGetComponent(out _collider))
         {
             _type = _collider.GetType();
+        }
+    }
+
+    private void Update()
+    {
+        if (transform.position.y < _lowest)
+        {
+            Field.Instance.Position += transform.position.y - _lowest;
         }
     }
 
@@ -202,6 +212,12 @@ public class Frog : SingletonMono<Frog>
         var pos2 = new Vector2(Field.Instance.Vertex3.x, _highest);
 
         Gizmos.color = Color.blue;
+        Gizmos.DrawLine(pos1, pos2);
+
+        pos1.y = _lowest;
+        pos2.y = _lowest;
+
+        Gizmos.color = Color.red;
         Gizmos.DrawLine(pos1, pos2);
     }
 }

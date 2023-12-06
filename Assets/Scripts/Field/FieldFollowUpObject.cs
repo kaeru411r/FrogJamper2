@@ -2,31 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using System;
 
 /// <summary>
 /// フィールドに追従するオブジェクト
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
 public class FieldFollowUpObject : MonoBehaviour
 {
+    IDisposable _subject;
 
-    public Rigidbody2D Rigidbody { get; private set; }
-
-    // Start is called before the first frame update
-    protected void Start()
+    private void OnEnable()
     {
-        Rigidbody = GetComponent<Rigidbody2D>();
-        if (Field.Instance)
-        {
-            Field.Instance.MoveSubject.Subscribe(Move).AddTo(this);
-        }
+        _subject = Field.Instance?.MoveSubject.Subscribe(Move).AddTo(this);
     }
 
+    private void OnDisable()
+    {
+        _subject?.Dispose();
+    }
 
     void Move(float distance)
     {
         transform.Translate(Vector2.down * distance);
-        //Rigidbody.MovePosition((Vector2)transform.position + ());
     }
 
 }
