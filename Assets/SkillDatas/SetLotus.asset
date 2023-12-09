@@ -20,3 +20,4 @@ MonoBehaviour:
     RefIds:
     - rid: 311393104188145668
       type: {class: SetLotus, ns: , asm: Assembly-CSharp}
+      data: 

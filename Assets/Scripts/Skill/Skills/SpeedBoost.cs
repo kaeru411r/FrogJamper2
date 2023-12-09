@@ -21,6 +21,7 @@ public class SpeedBoost : ISkill
     {
         Debug.Log("SpeedUp");
         _frog = Frog.Instance;
+        Debug.Log(_frog.transform);
         if (_frog)
         {
             _frog.Speed *= _boost;

@@ -23,7 +23,7 @@ public class FieldFollowUpObject : MonoBehaviour
 
     void Move(float distance)
     {
-        transform.Translate(Vector2.down * distance);
+        transform.Translate(Vector3.down * distance, Space.World);
     }
 
 }

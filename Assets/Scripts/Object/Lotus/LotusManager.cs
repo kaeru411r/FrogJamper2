@@ -137,7 +137,7 @@ public class LotusManager : MonoBehaviour
                 .AddTo(this);
 
             var speed = Random.Range(_lowerSpeed, _upperSpeed);
-            lotus.Speed = Vector2.down * speed;
+            lotus.Velocity = Vector2.down * speed;
             lotus.RunStart();
             return lotus;
         }

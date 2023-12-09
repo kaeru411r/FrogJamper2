@@ -12,7 +12,7 @@ using UniRx.Triggers;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Lotus : MonoBehaviour, IRideable
 {
-    [SerializeField] Vector2 _speed = Vector2.zero;
+    [SerializeField] Vector2 _velocity = Vector2.zero;
     [SerializeField] Sprite _texture;
     [SerializeField] int _hierarchy = 0;
     [SerializeField] int _score = 0;
@@ -24,8 +24,18 @@ public class Lotus : MonoBehaviour, IRideable
     /// <summary>îÒîjâÛéûÇ…åƒÇ—èoÇ∑</summary>
     public IObservable<IRideable> OnDestroyed => _onDestroyed;
     /// <summary>à⁄ìÆë¨ìx</summary>
-    public Vector2 Speed { get => _speed; set => _speed = value; }
-    public Rigidbody2D Rigidbody => _rigidbody;
+    public Vector2 Velocity { get => _velocity; set => _velocity = value; }
+    public Rigidbody2D Rigidbody
+    {
+        get
+        {
+            if (!_rigidbody)
+            {
+                _rigidbody = GetComponent<Rigidbody2D>();
+            }
+            return _rigidbody;
+        }
+    }
     public Transform Transform => transform;
     public int Hierarchy => _hierarchy;
 
@@ -49,10 +59,19 @@ public class Lotus : MonoBehaviour, IRideable
             .Where(state => state == EreaState.Off)
             .Subscribe(_ => Destroy(gameObject))
             .AddTo(this);
-        gameObject.FixedUpdateAsObservable()
-            .Subscribe(_ => _rigidbody.MovePosition(transform.position + (Vector3)_speed * Time.fixedDeltaTime))
-            .AddTo(this);
+        StartCoroutine(Running());
     }
+
+    IEnumerator Running()
+    {
+        while (true)
+        {
+            yield return new WaitForFixedUpdate();
+            transform.Translate((Vector3)_velocity * Time.fixedDeltaTime, Space.World);
+        }
+    }
+
+
     private void OnDestroy()
     {
         _onDestroyed.OnNext(this);

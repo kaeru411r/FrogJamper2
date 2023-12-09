@@ -12,18 +12,16 @@ using UnityEngine.UIElements;
 /// <summary>
 /// カエル
 /// </summary>
-[RequireComponent(typeof(Joint2D), typeof(Rigidbody2D))]
+[RequireComponent(/*typeof(Joint2D), */typeof(Rigidbody2D))]
 public class Frog : SingletonMono<Frog>
 {
 
     [Tooltip("スピード")]
     [SerializeField] float _speed;
+    [Tooltip("ジャンプ距離のチャージ速度")]
     [SerializeField] float _chargeSpeed;
-    [SerializeField] PlayerInput _playerInput;
     [Tooltip("高さ制限")]
     [SerializeField] float _highest;
-    [Tooltip("高さ制限")]
-    [SerializeField] float _lowest;
 
     Vector2 _targetPosition;
     ReactiveProperty<float> _distance = new ReactiveProperty<float>();
@@ -33,6 +31,7 @@ public class Frog : SingletonMono<Frog>
     Rigidbody2D _rigidBody;
     Type _type;
     Collider2D _collider;
+
 
     /// <summary>スピード</summary>
     public float Speed { get => _speed; set => _speed = value; }
@@ -83,15 +82,6 @@ public class Frog : SingletonMono<Frog>
             _type = _collider.GetType();
         }
     }
-
-    private void Update()
-    {
-        if (transform.position.y < _lowest)
-        {
-            Field.Instance.Position += transform.position.y - _lowest;
-        }
-    }
-
     IEnumerator Targeting()
     {
         while (true)
@@ -114,7 +104,8 @@ public class Frog : SingletonMono<Frog>
     IEnumerator Jumping(Vector2 direction)
     {
         _rigidBody.velocity = Vector2.zero;
-        _joint.enabled = false;
+        //_joint.enabled = false;
+        transform.SetParent(null, true);
         _frogState.Value = FrogState.Jump;
         while (_distance.Value > 0)
         {
@@ -143,11 +134,11 @@ public class Frog : SingletonMono<Frog>
                 .FirstOrDefault();
             _frogState.Value = FrogState.Stand;
 
-
+            transform.SetParent(rideable.Transform, false);
             transform.localPosition = Vector3.zero;
-            transform.position = rideable.Transform.position;
-            _joint.enabled = true;
-            _joint.connectedBody = rideable.Rigidbody;
+            //transform.position = rideable.Transform.position;
+            //_joint.enabled = true;
+            //_joint.connectedBody = rideable.Rigidbody;
 
             rideable.Ride();
 
@@ -170,6 +161,8 @@ public class Frog : SingletonMono<Frog>
 
     private void Drowing()
     {
+        Debug.Log(2);
+        transform.parent = null;
         _frogState.Value = FrogState.Drown;
     }
 
@@ -183,12 +176,12 @@ public class Frog : SingletonMono<Frog>
             var box = (BoxCollider2D)_collider;
             hits = Physics2D.BoxCastAll(pos, box.size, box.transform.eulerAngles.z, Vector2.zero, 1.0f);
         }
-        else if(_type == typeof(CircleCollider2D))
+        else if (_type == typeof(CircleCollider2D))
         {
             var circle = (CircleCollider2D)_collider;
             hits = Physics2D.CircleCastAll(pos, circle.radius, Vector2.zero);
         }
-        else if(_type == typeof(CapsuleCollider2D))
+        else if (_type == typeof(CapsuleCollider2D))
         {
             var capsule = (CapsuleCollider2D)_collider;
             hits = Physics2D.CapsuleCastAll(pos, capsule.size, capsule.direction, capsule.transform.eulerAngles.z, Vector2.zero);
@@ -206,18 +199,19 @@ public class Frog : SingletonMono<Frog>
         rideables = GetRideables();
         return rideables != null;
     }
+
+
+    private void OnDestroy()
+    {
+        Debug.Log(1);
+    }
+
     private void OnDrawGizmosSelected()
     {
         var pos1 = new Vector2(Field.Instance.Vertex1.x, _highest);
         var pos2 = new Vector2(Field.Instance.Vertex3.x, _highest);
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(pos1, pos2);
-
-        pos1.y = _lowest;
-        pos2.y = _lowest;
-
-        Gizmos.color = Color.red;
         Gizmos.DrawLine(pos1, pos2);
     }
 }

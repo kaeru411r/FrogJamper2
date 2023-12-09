@@ -9,7 +9,7 @@ public class Skill : ScriptableObject
 {
     [SerializeField] float _coolTime;
     [SelectableSerializeReference, SerializeReference]
-    ISkill[] _skills;
+    ISkill[] _skills = new ISkill[0];
 
     float _time = 0.0f;
     bool _isReady = false;
