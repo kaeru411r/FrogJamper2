@@ -161,7 +161,6 @@ public class Frog : SingletonMono<Frog>
 
     private void Drowing()
     {
-        Debug.Log(2);
         transform.parent = null;
         _frogState.Value = FrogState.Drown;
     }
