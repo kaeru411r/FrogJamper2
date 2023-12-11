@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
+public abstract class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T>
 {
     static T instance;
+
+    virtual protected bool isDestroyOnLoad { get { return false; } }
 
     public static T Instance
     {
@@ -13,7 +15,7 @@ public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
             if (instance == null)
             {
                 instance = FindObjectOfType<T>();
-                if (instance == null)
+                if(instance == null)
                 {
                     Debug.LogError($"{typeof(T)}ÇÕå©Ç¬Ç©ÇËÇ‹ÇπÇÒÇ≈ÇµÇΩÅB");
                 }
@@ -31,20 +33,24 @@ public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
     {
         if (instance == null)
         {
-            instance = this as T;
+            instance = (T)this;
 
-            if(instance == null)
+            if (isDestroyOnLoad)
             {
-                return false;
+                DontDestroyOnLoad(instance);
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
+        }
+        else if(instance == this)
+        {
+            return true;
         }
         else
         {
+            Destroy(this);
             return false;
         }
     }
 }
+
