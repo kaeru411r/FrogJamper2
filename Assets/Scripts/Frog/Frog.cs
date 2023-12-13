@@ -27,7 +27,6 @@ public class Frog : SingletonMono<Frog>
     ReactiveProperty<float> _distance = new ReactiveProperty<float>();
     bool _isTouching = false;
     ReactiveProperty<FrogState> _frogState = new ReactiveProperty<FrogState>(FrogState.Stand);
-    Joint2D _joint;
     Rigidbody2D _rigidBody;
     Type _type;
     Collider2D _collider;
@@ -76,7 +75,6 @@ public class Frog : SingletonMono<Frog>
         InputAgent2.Subscribe("Player", "MousePosition", OnMousePosition);
         InputAgent2.Subscribe("Player", "Touch", OnTouch);
 
-        _joint = GetComponent<Joint2D>();
         if (TryGetComponent(out _collider))
         {
             _type = _collider.GetType();
@@ -104,8 +102,7 @@ public class Frog : SingletonMono<Frog>
     IEnumerator Jumping(Vector2 direction)
     {
         _rigidBody.velocity = Vector2.zero;
-        //_joint.enabled = false;
-        transform.SetParent(null, true);
+
         _frogState.Value = FrogState.Jump;
         while (_distance.Value > 0)
         {
@@ -115,32 +112,34 @@ public class Frog : SingletonMono<Frog>
             dis = Mathf.Min(dis, _distance.Value);
             transform.Translate(direction * dis, Space.World);
 
-            if (transform.position.y > _highest)
+            float pos = transform.position.y - Field.Instance.Center.y;
+
+            if (pos > _highest)
             {
-                Field.Instance.Position += transform.position.y - _highest;
+                Field.Instance.Position += pos - _highest;
             }
             _distance.Value -= dis;
         }
 
-        Landing();
+        Land();
     }
 
-    private void Landing()
+    private void Land()
     {
         if (TryGetRideables(out IRideable[] rideables))
         {
             var rideable = rideables
-                .OrderByDescending(rideable => Vector2.Distance(transform.position, rideable.Transform.position))
+                .OrderByDescending(rideable => Vector2.Distance(transform.position, rideable.Position))
                 .FirstOrDefault();
             _frogState.Value = FrogState.Stand;
 
-            transform.SetParent(rideable.Transform, false);
-            transform.localPosition = Vector3.zero;
             //transform.position = rideable.Transform.position;
             //_joint.enabled = true;
             //_joint.connectedBody = rideable.Rigidbody;
 
-            rideable.Ride();
+            var onPosition = rideable.Ride()
+                .Subscribe(Landing)
+                .AddTo(this);
 
             var onLotusDestroy = rideable.OnDestroyed
                 .Subscribe(_ => Drowing())
@@ -148,7 +147,11 @@ public class Frog : SingletonMono<Frog>
 
             _frogState
                 .Where(state => state == FrogState.Jump)
-                .Subscribe(_ => onLotusDestroy.Dispose());
+                .Subscribe(_ =>
+                {
+                    onLotusDestroy.Dispose();
+                    onPosition.Dispose();
+                });
         }
         else
         {
@@ -156,6 +159,11 @@ public class Frog : SingletonMono<Frog>
         }
 
 
+    }
+
+    private void Landing(Vector2 position)
+    {
+        transform.position = position;
     }
 
 

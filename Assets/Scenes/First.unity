@@ -136,7 +136,6 @@ GameObject:
   - component: {fileID: 589244515}
   - component: {fileID: 589244514}
   - component: {fileID: 589244513}
-  - component: {fileID: 589244518}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Untagged
@@ -286,18 +285,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &589244518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 589244512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3da29a3fc3eef05409935aa2c69333ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &640935402
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,7 +511,6 @@ GameObject:
   - component: {fileID: 1119181743}
   - component: {fileID: 1119181744}
   - component: {fileID: 1119181745}
-  - component: {fileID: 1119181746}
   m_Layer: 0
   m_Name: ReadyFrog
   m_TagString: Untagged
@@ -721,18 +707,6 @@ FixedJoint2D:
   m_ConnectedAnchor: {x: 0, y: -5.28}
   m_DampingRatio: 0
   m_Frequency: 0
---- !u!114 &1119181746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1119181737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3da29a3fc3eef05409935aa2c69333ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1260466059
 GameObject:
   m_ObjectHideFlags: 0
@@ -921,6 +895,7 @@ GameObject:
   - component: {fileID: 1639651767}
   - component: {fileID: 1639651766}
   - component: {fileID: 1639651769}
+  - component: {fileID: 1639651770}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -963,9 +938,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.25773513
+    x: 0.25892857
     y: 0
-    width: 0.4845297
+    width: 0.48214287
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -1016,6 +991,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetCamera: {fileID: 1639651767}
   aspectVec: {x: 9, y: 16}
+--- !u!114 &1639651770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639651765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba62a55137d2ef4c8c1c483d05bc3ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1675690135
 GameObject:
   m_ObjectHideFlags: 0

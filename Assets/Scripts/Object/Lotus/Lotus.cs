@@ -20,6 +20,7 @@ public class Lotus : MonoBehaviour, IRideable
     Rigidbody2D _rigidbody;
     Subject<IRideable> _onDestroyed = new Subject<IRideable>();
     bool _isRided = false;
+    Subject<Vector2> _onPosition = new Subject<Vector2>();
 
     /// <summary>îÒîjâÛéûÇ…åƒÇ—èoÇ∑</summary>
     public IObservable<IRideable> OnDestroyed => _onDestroyed;
@@ -36,16 +37,18 @@ public class Lotus : MonoBehaviour, IRideable
             return _rigidbody;
         }
     }
-    public Transform Transform => transform;
     public int Hierarchy => _hierarchy;
 
-    public void Ride()
+    public Vector2 Position => transform.position;
+
+    public IObservable<Vector2> Ride()
     {
         if (!_isRided)
         {
             _isRided = true;
             ScoreModel.Instance.AddScore(_score);
         }
+        return _onPosition;
     }
 
 
@@ -53,7 +56,7 @@ public class Lotus : MonoBehaviour, IRideable
     public void RunStart()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        //_rigidbody.velocity = _speed;
+
         _rigidbody.bodyType = RigidbodyType2D.Kinematic;
         Field.Instance.EreaSubject(transform)
             .Where(state => state == EreaState.Off)
@@ -68,6 +71,7 @@ public class Lotus : MonoBehaviour, IRideable
         {
             yield return new WaitForFixedUpdate();
             transform.Translate((Vector3)_velocity * Time.fixedDeltaTime, Space.World);
+            _onPosition.OnNext(transform.position);
         }
     }
 

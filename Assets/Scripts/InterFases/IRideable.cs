@@ -6,10 +6,10 @@ using UnityEngine;
 public interface IRideable
 {
     public int Hierarchy { get; }
-    public Transform Transform { get; }
     public Rigidbody2D Rigidbody { get; }
+    public Vector2 Position { get; }
     /// <summary>”ñ”j‰ó‚ÉŒÄ‚Ño‚·</summary>
     public IObservable<IRideable> OnDestroyed { get; }
 
-    public void Ride();
+    public IObservable<Vector2> Ride();
 }

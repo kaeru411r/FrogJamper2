@@ -18,8 +18,6 @@ public class Goal : MonoBehaviour, IRideable
 
     public int Hierarchy => _hierarchy;
 
-    public Transform Transform => transform;
-
     public Rigidbody2D Rigidbody
     {
         get
@@ -35,12 +33,18 @@ public class Goal : MonoBehaviour, IRideable
     public IObservable<IRideable> OnDestroyed => _onDestroyed;
 
     public IObservable<Unit> OnGoal => _onGoal;
+    public Vector2 Position => transform.position;
 
-    public void Ride()
+    public IObservable<Vector2> Ride()
     {
         Debug.Log("ÉSÅ[Éã");
         _onGoal.OnNext(Unit.Default);
         _onGoal.OnCompleted();
+
+        var subject = new Subject<Vector2>();
+        subject.OnNext(transform.position);
+
+        return subject;
     }
 
     // Start is called before the first frame update

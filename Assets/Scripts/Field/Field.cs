@@ -29,13 +29,13 @@ public class Field : SingletonMono<Field>
             .Where(_ =>
             {
                 var buf = EreaCheck(transform);
-                if( buf != state)
+                if (buf != state)
                 {
                     state = buf;
                     return true;
                 }
                 return false;
-                })
+            })
             .Select(_ => state);
 
         return subject;
@@ -51,26 +51,15 @@ public class Field : SingletonMono<Field>
         }
     }
 
-    public Vector2 Vertex1 { get => _topLeft; set => _topLeft = value; }
-    public Vector2 Vertex3 { get => _bottomRight; set => _bottomRight = value; }
-    public Vector2 Vertex2
-    {
-        get => new Vector2(_bottomRight.x, _topLeft.y);
-        set
-        {
-            _topLeft.y = value.y;
-            _bottomRight.x = value.x;
-        }
-    }
-    public Vector2 Vertex4
-    {
-        get => new Vector2(_topLeft.x, _bottomRight.y);
-        set
-        {
-            _topLeft.x = value.x;
-            _bottomRight.y = value.y;
-        }
-    }
+    public Vector2 Center { get => Vector2.Lerp(Vertex1, Vertex3, 0.5f); }
+
+    public Vector2 Vertex1 { get => _topLeft + Vector2.up * _position; }
+    public Vector2 Vertex3 { get => _bottomRight + Vector2.up * _position; }
+    public Vector2 Vertex2 { get => new Vector2(_bottomRight.x, _topLeft.y + _position); }
+    public Vector2 Vertex4 { get => new Vector2(_topLeft.x, _bottomRight.y + _position); }
+
+    public Vector2 BottomRight { get => _bottomRight; set => _bottomRight = value; }
+    public Vector2 TopLeft { get => _topLeft; set => _topLeft = value; }
 
     public EreaState EreaCheck(Vector2 position)
     {
