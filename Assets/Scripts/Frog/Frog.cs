@@ -74,7 +74,6 @@ public class Frog : SingletonMono<Frog>
         _rigidBody = GetComponent<Rigidbody2D>();
         InputAgent2.Subscribe("Player", "MousePosition", OnMousePosition);
         InputAgent2.Subscribe("Player", "Touch", OnTouch);
-
         if (TryGetComponent(out _collider))
         {
             _type = _collider.GetType();
@@ -128,20 +127,17 @@ public class Frog : SingletonMono<Frog>
     {
         if (TryGetRideables(out IRideable[] rideables))
         {
-            var rideable = rideables
+            var rideObject = rideables
                 .OrderByDescending(rideable => Vector2.Distance(transform.position, rideable.Position))
                 .FirstOrDefault();
+
             _frogState.Value = FrogState.Stand;
 
-            //transform.position = rideable.Transform.position;
-            //_joint.enabled = true;
-            //_joint.connectedBody = rideable.Rigidbody;
-
-            var onPosition = rideable.Ride()
+            var onPosition = rideObject.Ride()
                 .Subscribe(Landing)
                 .AddTo(this);
 
-            var onLotusDestroy = rideable.OnDestroyed
+            var onLotusDestroy = rideObject.OnDestroyed
                 .Subscribe(_ => Drowing())
                 .AddTo(this);
 
@@ -151,11 +147,12 @@ public class Frog : SingletonMono<Frog>
                 {
                     onLotusDestroy.Dispose();
                     onPosition.Dispose();
-                });
+                })
+                .AddTo(this);
         }
         else
         {
-            Drowing();
+            StartCoroutine(Drowing());
         }
 
 
@@ -167,10 +164,11 @@ public class Frog : SingletonMono<Frog>
     }
 
 
-    private void Drowing()
+    private IEnumerator Drowing()
     {
-        transform.parent = null;
         _frogState.Value = FrogState.Drown;
+        IngameManager.Instance.Drowing();
+        yield return _frogState;
     }
 
     IRideable[] GetRideables()
@@ -205,12 +203,6 @@ public class Frog : SingletonMono<Frog>
     {
         rideables = GetRideables();
         return rideables != null;
-    }
-
-
-    private void OnDestroy()
-    {
-        Debug.Log(1);
     }
 
     private void OnDrawGizmosSelected()

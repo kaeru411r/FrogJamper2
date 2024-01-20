@@ -12,10 +12,10 @@ public abstract class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T
     {
         get
         {
-            if (instance == null)
+            if (!instance)
             {
                 instance = FindObjectOfType<T>();
-                if(instance == null)
+                if(!instance)
                 {
                     Debug.LogError($"{typeof(T)}ÇÕå©Ç¬Ç©ÇËÇ‹ÇπÇÒÇ≈ÇµÇΩÅB");
                 }

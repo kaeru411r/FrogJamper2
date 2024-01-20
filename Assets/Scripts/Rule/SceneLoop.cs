@@ -9,8 +9,10 @@ public class SceneLoop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Frog.Instance.OnState
-            .Where(state => state == FrogState.Drown)
+        IngameManager.Instance.ViewModel.OnGameEnd
+            .Subscribe(_ => Restart())
+            .AddTo(this);
+        IngameManager.Instance.ViewModel.OnDrown
             .Subscribe(_ => Restart())
             .AddTo(this);
     }
