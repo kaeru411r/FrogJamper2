@@ -5,15 +5,12 @@ using UnityEngine;
 [ExecuteAlways]
 public class SceneViewSetter : MonoBehaviour
 {
-    [Tooltip("‘ÎÛ‚Æ‚·‚éƒJƒƒ‰")]
-    [SerializeField] private Camera targetCamera;
     [Tooltip("–Ú“I‰ğ‘œ“x")]
     [SerializeField] private Vector2 aspectVec;
 
 
     void Update()
     {
-        if (targetCamera == null) { return; }
         var screenAspect = Screen.width / (float)Screen.height;
         var targetAspect = aspectVec.x / aspectVec.y;
 
@@ -32,6 +29,6 @@ public class SceneViewSetter : MonoBehaviour
             viewportRect.y = 0.5f - viewportRect.height * 0.5f;
         }
 
-        targetCamera.rect = viewportRect;
+        Camera.main.rect = viewportRect;
     }
 }

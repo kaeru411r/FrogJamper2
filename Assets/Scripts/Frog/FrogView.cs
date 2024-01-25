@@ -70,7 +70,9 @@ public class FrogView : MonoBehaviour
             var x = distance * Mathf.Sin(-transform.eulerAngles.z /180 * Mathf.PI);
             var y = distance * Mathf.Cos(-transform.eulerAngles.z / 180 * Mathf.PI);
             var pos = transform.position + new Vector3(x, y, 0);
-            _sight.transform.position = Camera.main.WorldToScreenPoint(pos);
+            Debug.DrawLine(pos, transform.position);
+            Debug.Log(pos);
+            _sight.transform.position = pos;
         }
 
 

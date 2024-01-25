@@ -28,7 +28,6 @@ public class IngameViewModel
     public IObservable<int> OnLife => _onLife;
     public IObservable<Unit> OnDrown => _onDrown;
 
-
     public void GameEnd()
     {
         _onGameEnd.OnNext(Unit.Default);

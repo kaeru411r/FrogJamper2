@@ -42,7 +42,6 @@ public class LifeView : MonoBehaviour
         for (int i = _lifes.Length - 1; i >= life % _lifes.Length; i--)
         {
             _lifes[i].material = _lifeMaterials[index];
-            Debug.Log($"{i}, {index}");
         }
 
         index++;
@@ -54,7 +53,6 @@ public class LifeView : MonoBehaviour
             {
                 Debug.LogError(life + "" + _lifes.Length);
             }
-            Debug.Log($"{i}, {index}");
             _lifes[i].material = _lifeMaterials[index];
         }
     }

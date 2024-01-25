@@ -10,17 +10,6 @@ using UniRx;
 /// </summary>
 public class SkillUser : MonoBehaviour
 {
-    [Tooltip("スキル1")]
-    [SerializeField] Skill _skill1;
-    [Tooltip("スキル2")]
-    [SerializeField] Skill _skill2;
-    [Tooltip("スキル3")]
-    [SerializeField] Skill _skill3;
-
-    public Skill Skill1 { get => _skill1; set => _skill1 = value; }
-    public Skill Skill2 { get => _skill2; set => _skill2 = value; }
-    public Skill Skill3 { get => _skill3; set => _skill3 = value; }
-
     private void Start()
     {
         InputAgent2.Subscribe("Player", "Skill1", OnSkill1).AddTo(this);
@@ -30,18 +19,26 @@ public class SkillUser : MonoBehaviour
 
     private void Update()
     {
-        _skill1.Cooling(Time.deltaTime);
-        _skill2.Cooling(Time.deltaTime);
-        _skill3.Cooling(Time.deltaTime);
+        Cooling();
+    }
+
+    void Cooling()
+    {
+        var skillSet = SkillSet.Instance;
+
+        skillSet.Skill1?.Cooling(Time.deltaTime);
+        skillSet.Skill2?.Cooling(Time.deltaTime);
+        skillSet.Skill2?.Cooling(Time.deltaTime);
     }
 
     void OnSkill1(InputAction.CallbackContext callback)
     {
         if (callback.phase == InputActionPhase.Canceled)
         {
-            if (_skill1.IsReady)
+            var skillSet = SkillSet.Instance;
+            if (skillSet.Skill1.IsReady)
             {
-                _skill1.Play();
+                skillSet.Skill1.Play();
             }
         }
     }
@@ -49,9 +46,10 @@ public class SkillUser : MonoBehaviour
     {
         if (callback.phase == InputActionPhase.Canceled)
         {
-            if (_skill2.IsReady)
+            var skillSet = SkillSet.Instance;
+            if (skillSet.Skill2.IsReady)
             {
-                _skill2.Play();
+                skillSet.Skill2.Play();
             }
         }
     }
@@ -59,9 +57,10 @@ public class SkillUser : MonoBehaviour
     {
         if (callback.phase == InputActionPhase.Canceled)
         {
-            if (_skill3.IsReady)
+            var skillSet = SkillSet.Instance;
+            if (skillSet.Skill3.IsReady)
             {
-                _skill3.Play();
+                skillSet.Skill3.Play();
             }
         }
     }

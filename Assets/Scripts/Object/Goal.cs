@@ -13,7 +13,6 @@ public class Goal : MonoBehaviour, IRideable
 
     Rigidbody2D _rigidbody;
     Subject<IRideable> _onDestroyed = new Subject<IRideable>();
-    Subject<Unit> _onGoal = new Subject<Unit>();
 
 
     public int Hierarchy => _hierarchy;
@@ -32,17 +31,18 @@ public class Goal : MonoBehaviour, IRideable
 
     public IObservable<IRideable> OnDestroyed => _onDestroyed;
 
-    public IObservable<Unit> OnGoal => _onGoal;
     public Vector2 Position => transform.position;
 
     public IObservable<Vector2> Ride()
     {
         Debug.Log("ÉSÅ[Éã");
-        _onGoal.OnNext(Unit.Default);
-        _onGoal.OnCompleted();
+
+        ScoreModel.Instance.IsCrear = true;
 
         var subject = new Subject<Vector2>();
         subject.OnNext(transform.position);
+
+        IngameManager.Instance.Goal();
 
         return subject;
     }

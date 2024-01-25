@@ -72,8 +72,8 @@ public class Frog : SingletonMono<Frog>
     private void Start()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
-        InputAgent2.Subscribe("Player", "MousePosition", OnMousePosition);
-        InputAgent2.Subscribe("Player", "Touch", OnTouch);
+        InputAgent2.Subscribe("Player", "MousePosition", OnMousePosition).AddTo(this);
+        InputAgent2.Subscribe("Player", "Touch", OnTouch).AddTo(this);
         if (TryGetComponent(out _collider))
         {
             _type = _collider.GetType();
@@ -167,7 +167,7 @@ public class Frog : SingletonMono<Frog>
     private IEnumerator Drowing()
     {
         _frogState.Value = FrogState.Drown;
-        IngameManager.Instance.Drowing();
+        IngameManager.Instance.Drow();
         yield return _frogState;
     }
 

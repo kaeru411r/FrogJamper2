@@ -6,7 +6,7 @@ public abstract class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T
 {
     static T instance;
 
-    virtual protected bool isDestroyOnLoad { get { return false; } }
+    virtual protected bool isDontDestroyOnLoad => false;
 
     public static T Instance
     {
@@ -35,7 +35,7 @@ public abstract class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T
         {
             instance = (T)this;
 
-            if (isDestroyOnLoad)
+            if (isDontDestroyOnLoad)
             {
                 DontDestroyOnLoad(instance);
             }

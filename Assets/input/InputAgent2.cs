@@ -24,7 +24,7 @@ namespace InputSystemAgent
             {
                 _inputMaps.Add(map);
                 map.actionTriggered += OnAction;
-                map.Enable();
+                //map.Enable();
                 foreach (var action in map)
                 {
                     _inputSubjects.Add(action, new Subject<InputAction.CallbackContext>());
