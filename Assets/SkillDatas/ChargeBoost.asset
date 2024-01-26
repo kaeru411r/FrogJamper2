@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: ChargeBoost
   m_EditorClassIdentifier: 
   _coolTime: 20
+  _name: "\u30C1\u30E3\u30FC\u30B8\u52A0\u901F"
+  _tips: "5\u79D2\u9593\u30C1\u30E3\u30FC\u30B8\u901F\u5EA6\u304C1.3\u500D\u306B\u306A\u308B\n\u30AF\u30FC\u30EB\u30BF\u30A4\u30E020\u79D2"
   _skills:
   - rid: 311393241022332929
   references:

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: SpeedBoost
   m_EditorClassIdentifier: 
   _coolTime: 10
+  _name: "\u901F\u5EA6\u30A2\u30C3\u30D7"
+  _tips: "3\u79D2\u9593\u30B8\u30E3\u30F3\u30D7\u901F\u5EA6\u304C1.5\u500D\u306B\u306A\u308B\n\u30AF\u30FC\u30EB\u30BF\u30A4\u30E010\u79D2"
   _skills:
   - rid: 311393241022332928
   references:

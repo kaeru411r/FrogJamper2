@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: SetLotus
   m_EditorClassIdentifier: 
   _coolTime: 30
+  _name: "\u84EE\u306E\u8449\u8A2D\u7F6E"
+  _tips: "\u30AB\u30A8\u30EB\u306E\u771F\u4E0B\u306B\u84EE\u306E\u8449\u3092\u8A2D\u7F6E\u3059\u308B\n\u30AF\u30FC\u30EB\u30BF\u30A4\u30E030\u79D2"
   _skills:
   - rid: 311393104188145668
   references:

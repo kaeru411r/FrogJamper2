@@ -8,6 +8,9 @@ using UnityEngine;
 public class Skill : ScriptableObject
 {
     [SerializeField] float _coolTime;
+    [SerializeField] string _name;
+    [TextArea(1, 5)]
+    [SerializeField] string _tips;
     [SelectableSerializeReference, SerializeReference]
     ISkill[] _skills = new ISkill[0];
 
@@ -18,6 +21,8 @@ public class Skill : ScriptableObject
 
     public bool IsReady => _isReady;
 
+    public string Name { get => _name; set => _name = value; }
+    public string Tips { get => _tips; set => _tips = value; }
 
     public void Cooling(float time)
     {
