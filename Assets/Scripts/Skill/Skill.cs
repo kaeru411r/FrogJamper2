@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -16,6 +18,7 @@ public class Skill : ScriptableObject
 
     float _time = 0.0f;
     bool _isReady = false;
+    ReactiveProperty<float> _coolPar = new ReactiveProperty<float>();
 
     public ISkill[] Skills { get => _skills;}
 
@@ -23,10 +26,12 @@ public class Skill : ScriptableObject
 
     public string Name { get => _name; set => _name = value; }
     public string Tips { get => _tips; set => _tips = value; }
+    public IObservable<float> CoolPar => _coolPar;
 
     public void Cooling(float time)
     {
         _time -= time;
+        _coolPar.Value = _coolTime > 0 ? _time / _coolTime : 0.0f;
 
         if (_time <= 0)
         {
